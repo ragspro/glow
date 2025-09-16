@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow - Pricing Plans</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <!-- Floating Background Shapes -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="gallery-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-text">Glow</span>
+                </div>
+                <a href="index.html" class="back-link">← Back to Home</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <h1 class="pricing-title">Choose Your Plan</h1>
+            <p class="pricing-subtitle">Upgrade anytime. Cancel anytime. No hidden fees.</p>
+            
+            <div class="pricing-grid">
+                <!-- Free Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Free</h3>
+                        <div class="price">₹0</div>
+                        <p>Perfect to get started</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">✅ 3 AI Generations</div>
+                        <div class="feature">✅ All Prompt Templates</div>
+                        <div class="feature">✅ Basic Support</div>
+                        <div class="feature">❌ Priority Processing</div>
+                    </div>
+                    <button class="plan-button current" disabled>Current Plan</button>
+                </div>
+
+                <!-- Basic Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Basic</h3>
+                        <div class="price">₹200</div>
+                        <p>For regular users</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">✅ 10 AI Generations</div>
+                        <div class="feature">✅ All Prompt Templates</div>
+                        <div class="feature">✅ Priority Support</div>
+                        <div class="feature">✅ HD Quality</div>
+                    </div>
+                    <button class="plan-button" onclick="purchasePlan('BASIC')">Upgrade Now</button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="plan-header">
+                        <h3>Pro</h3>
+                        <div class="price">₹499</div>
+                        <p>Best value for creators</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">✅ 50 AI Generations</div>
+                        <div class="feature">✅ All Prompt Templates</div>
+                        <div class="feature">✅ Priority Support</div>
+                        <div class="feature">✅ HD Quality</div>
+                        <div class="feature">✅ Commercial License</div>
+                    </div>
+                    <button class="plan-button" onclick="purchasePlan('PRO')">Upgrade Now</button>
+                </div>
+
+                <!-- Unlimited Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Unlimited</h3>
+                        <div class="price">₹1000</div>
+                        <p>For power users</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">✅ Unlimited Generations</div>
+                        <div class="feature">✅ All Prompt Templates</div>
+                        <div class="feature">✅ Priority Support</div>
+                        <div class="feature">✅ HD Quality</div>
+                        <div class="feature">✅ Commercial License</div>
+                        <div class="feature">✅ API Access</div>
+                    </div>
+                    <button class="plan-button" onclick="purchasePlan('UNLIMITED')">Upgrade Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="pricing.js"></script>
+</body>
+</html>

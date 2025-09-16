@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow - Prompt Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Floating Background Shapes -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Fixed Header -->
+    <header class="gallery-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="20" cy="20" r="18" fill="url(#logoGradient)" opacity="0.8"/>
+                        <circle cx="20" cy="20" r="12" fill="none" stroke="url(#logoGradient)" stroke-width="2"/>
+                        <circle cx="20" cy="20" r="6" fill="url(#logoGradient)"/>
+                    </svg>
+                    <span class="logo-text">Glow</span>
+                </div>
+                <a href="index.html" class="back-link">← Back to Home</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container">
+            <h1 class="gallery-title">AI Prompt Gallery</h1>
+            <p class="gallery-subtitle">Discover trending prompts and create your viral look</p>
+            
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Prompt cards loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Prompt Modal -->
+    <div class="prompt-modal" id="prompt-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">×</button>
+            <div class="modal-image">
+                <img id="modal-img" src="" alt="">
+            </div>
+            <div class="modal-info">
+                <h3 id="modal-title"></h3>
+                <div class="prompt-text">
+                    <textarea id="modal-prompt" readonly></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="cta-button secondary" id="copy-prompt">📋 Copy Prompt</button>
+                    <button class="cta-button primary" id="use-template">✨ Use Template</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="prompts.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
