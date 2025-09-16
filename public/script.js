@@ -709,15 +709,23 @@ async function generateAILook(imageFile, prompt) {
         if (result.success) {
             // Hide loading and show result
             hideLoadingAnimation();
-            displayGeneratedImage(result.imageUrl);
             
-            // Show remaining images count
-            const remaining = result.remainingImages;
-            const message = remaining === -1 
-                ? 'Your viral look is ready!' 
-                : `Your viral look is ready! ${remaining} generations remaining.`;
+            // Display result in new area
+            const resultSection = document.getElementById('result-section');
+            const resultImage = document.getElementById('result-image');
+            const resultPrompt = document.getElementById('result-prompt');
+            const resultTime = document.getElementById('result-time');
+            const resultMessage = document.getElementById('result-message');
             
-            showNotification(message, 'success');
+            resultImage.src = result.imageUrl;
+            resultPrompt.textContent = result.originalPrompt ? `Prompt: ${result.originalPrompt}` : '';
+            resultTime.textContent = result.processingTime ? `Processing Time: ${result.processingTime}` : '';
+            resultMessage.textContent = result.message || 'Your AI look is ready!';
+            
+            resultSection.style.display = 'block';
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+            
+            showNotification('Generation completed!', 'success');
         } else {
             throw new Error(result.error || 'Generation failed');
         }
@@ -1076,6 +1084,41 @@ function updateAuthUI() {
 document.addEventListener('DOMContentLoaded', function() {
     updateAuthUI();
 });
+
+// Download generated image
+function downloadImage() {
+    const resultImage = document.getElementById('result-image');
+    if (resultImage.src) {
+        const link = document.createElement('a');
+        link.href = resultImage.src;
+        link.download = `glow-ai-generated-${Date.now()}.jpg`;
+        link.click();
+        showNotification('Image downloaded!', 'success');
+    }
+}
+
+// Share generated image
+function shareImage() {
+    const resultImage = document.getElementById('result-image');
+    if (navigator.share && resultImage.src) {
+        navigator.share({
+            title: 'My AI Generated Look from Glow',
+            text: 'Check out my viral AI transformation!',
+            url: window.location.href
+        });
+    } else {
+        // Fallback - copy link
+        navigator.clipboard.writeText(window.location.href);
+        showNotification('Link copied to clipboard!', 'success');
+    }
+}
+
+// Generate another image
+function generateAnother() {
+    const resultSection = document.getElementById('result-section');
+    resultSection.style.display = 'none';
+    document.querySelector('.upload-section').scrollIntoView({ behavior: 'smooth' });
+}
 
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
