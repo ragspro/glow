@@ -54,7 +54,8 @@ const PLANS = {
 
 // Gemini API Integration Function
 async function generateWithGemini(imageFile, prompt) {
-    const { GoogleGenerativeAI } = require('@google/generative-ai');
+    try {
+        const { GoogleGenerativeAI } = require('@google/generative-ai');
     
     try {
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -91,6 +92,10 @@ async function generateWithGemini(imageFile, prompt) {
     } catch (error) {
         console.error('Gemini API error:', error);
         throw error;
+    }
+    } catch (importError) {
+        console.error('Gemini package not available:', importError);
+        throw new Error('Gemini AI service temporarily unavailable');
     }
 }
 
