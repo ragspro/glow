@@ -970,37 +970,72 @@ function showUpgradeModal(currentPlan) {
     document.head.appendChild(modalStyle);
 }
 
-// Display user status in header
+// Display profile dropdown in header
 function displayUserStatus() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user.email) {
-        const statusDiv = document.createElement('div');
-        statusDiv.className = 'user-status';
-        statusDiv.innerHTML = `
-            <span>Welcome, ${user.name || user.email}</span>
-            <span class="plan-badge">${user.plan || 'FREE'}</span>
-            <button onclick="logout()" class="logout-btn">Logout</button>
+        const profileDropdown = document.createElement('div');
+        profileDropdown.className = 'profile-dropdown';
+        profileDropdown.innerHTML = `
+            <div class="profile-trigger" onclick="toggleProfileDropdown()">
+                <img src="${user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email)}&background=667eea&color=fff&size=40`}" alt="Profile" class="profile-avatar">
+                <span class="profile-name">${user.name || user.email.split('@')[0]}</span>
+                <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                    <path d="M6 8L2 4h8L6 8z"/>
+                </svg>
+            </div>
+            <div class="profile-menu" id="profile-menu">
+                <div class="profile-header">
+                    <img src="${user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email)}&background=667eea&color=fff&size=50`}" alt="Profile" class="profile-avatar-large">
+                    <div class="profile-info">
+                        <div class="profile-name-large">${user.name || 'User'}</div>
+                        <div class="profile-email">${user.email}</div>
+                    </div>
+                </div>
+                <div class="profile-plan">
+                    <div class="plan-info">
+                        <span class="plan-label">Current Plan</span>
+                        <span class="plan-badge ${(user.plan || 'FREE').toLowerCase()}">${user.plan || 'FREE'}</span>
+                    </div>
+                    <div class="plan-usage">
+                        <span class="usage-text">${user.images_used || 0}/${user.images_limit === -1 ? '∞' : user.images_limit || 3} images used</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="profile-action-btn" onclick="window.location.href='pricing.html'">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 0L10 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6L8 0z"/>
+                        </svg>
+                        Upgrade Plan
+                    </button>
+                    <button class="profile-action-btn" onclick="logout()">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M3 3h8v2H3V3zm0 4h8v2H3V7zm0 4h5v2H3v-2zm10-1l-3-3v2H8v2h2v2l3-3z"/>
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            </div>
         `;
         
-        statusDiv.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 10px 15px;
-            z-index: 100;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            font-size: 0.9rem;
-        `;
-        
-        document.body.appendChild(statusDiv);
+        document.body.appendChild(profileDropdown);
     }
 }
+
+// Toggle profile dropdown
+function toggleProfileDropdown() {
+    const menu = document.getElementById('profile-menu');
+    menu.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const dropdown = document.querySelector('.profile-dropdown');
+    if (dropdown && !dropdown.contains(e.target)) {
+        const menu = document.getElementById('profile-menu');
+        if (menu) menu.classList.remove('show');
+    }
+});
 
 // Logout function
 function logout() {

@@ -128,6 +128,31 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+// Google Login Function
+async function loginWithGoogle() {
+    try {
+        const { createClient } = await import('https://cdn.skypack.dev/@supabase/supabase-js');
+        
+        const supabase = createClient(
+            'https://xmponioxmzfftfrowcrf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcG9uaW94bXpmZnRmcm93Y3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMTg1NTQsImV4cCI6MjA3MzU5NDU1NH0.sFIGvTn6q69Z8D2lSW-f0SYRmE2AgLB2Y1ZVm2g0dj4'
+        );
+        
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin + '/auth-callback.html'
+            }
+        });
+        
+        if (error) {
+            showNotification('Google login failed: ' + error.message, 'error');
+        }
+    } catch (error) {
+        showNotification('Google login error: ' + error.message, 'error');
+    }
+}
+
 // Check if already logged in
 if (localStorage.getItem('token')) {
     window.location.href = 'index.html';
