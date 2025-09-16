@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow - Authentication</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-callback-container">
+        <div class="loading-spinner"></div>
+        <h2>Completing Google Login...</h2>
+        <p>Please wait while we set up your account.</p>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+        
+        const supabase = createClient(
+            'https://xmponioxmzfftfrowcrf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcG9uaW94bXpmZnRmcm93Y3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMTg1NTQsImV4cCI6MjA3MzU5NDU1NH0.sFIGvTn6q69Z8D2lSW-f0SYRmE2AgLB2Y1ZVm2g0dj4'
+        );
+
+        // Handle the OAuth callback
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                const user = session.user;
+                
+                // Store user data
+                const userData = {
+                    id: user.id,
+                    email: user.email,
+                    name: user.user_metadata.full_name || user.user_metadata.name || user.email.split('@')[0],
+                    avatar_url: user.user_metadata.avatar_url || user.user_metadata.picture,
+                    plan: 'FREE',
+                    images_used: 0,
+                    images_limit: 3
+                };
+                
+                localStorage.setItem('token', session.access_token);
+                localStorage.setItem('user', JSON.stringify(userData));
+                
+                // Redirect to main page
+                window.location.href = 'index.html';
+            } else if (event === 'SIGNED_OUT') {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'auth.html';
+            }
+        });
+
+        // Get session on page load
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                const user = session.user;
+                const userData = {
+                    id: user.id,
+                    email: user.email,
+                    name: user.user_metadata.full_name || user.user_metadata.name || user.email.split('@')[0],
+                    avatar_url: user.user_metadata.avatar_url || user.user_metadata.picture,
+                    plan: 'FREE',
+                    images_used: 0,
+                    images_limit: 3
+                };
+                
+                localStorage.setItem('token', session.access_token);
+                localStorage.setItem('user', JSON.stringify(userData));
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+    </script>
+</body>
+</html>
