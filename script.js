@@ -6,7 +6,7 @@ const API_ENDPOINT = `${API_BASE}/api/generate-simple`; // Using simple endpoint
 
 // Simple mode - no auth required for testing
 const SIMPLE_MODE = true;
-const DEMO_MODE = true; // Use demo images without API
+const DEMO_MODE = false; // Use real API
 
 // Check if user is logged in
 function isLoggedIn() {
