@@ -10,21 +10,39 @@ const { createClient } = require('@supabase/supabase-js');
 const Razorpay = require('razorpay');
 const app = express();
 
+// Debug environment variables
+console.log('Environment check:');
+console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY ? 'Set' : 'Missing');
+console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'Set' : 'Missing');
+console.log('SUPABASE_SERVICE_KEY:', process.env.SUPABASE_SERVICE_KEY ? 'Set' : 'Missing');
+
 // API Keys from Environment Variables
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-jwt-secret-key';
 
 // Supabase Client
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY
-);
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    supabase = createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_KEY
+    );
+    console.log('✅ Supabase client initialized');
+} else {
+    console.log('❌ Supabase credentials missing');
+}
 
 // Razorpay Client
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+let razorpay = null;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+    console.log('✅ Razorpay client initialized');
+} else {
+    console.log('⚠️ Razorpay credentials missing - payments disabled');
+}
 
 // Pricing Plans
 const PLANS = {
@@ -317,6 +335,80 @@ app.get('/plans', (req, res) => {
         success: true,
         plans: PLANS
     });
+});
+
+// Simple Generate Endpoint (No Auth Required - For Testing)
+app.post('/generate-simple', upload.single('image'), async (req, res) => {
+    // Add CORS headers
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    
+    try {
+        const { prompt } = req.body;
+        const imageFile = req.file;
+        
+        console.log('Simple generation request:', { 
+            prompt: prompt?.substring(0, 50) + '...', 
+            hasFile: !!imageFile,
+            fileSize: imageFile?.size,
+            geminiKey: GEMINI_API_KEY ? 'Present' : 'Missing'
+        });
+        
+        if (!imageFile || !prompt) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Image and prompt required' 
+            });
+        }
+        
+        // Simulate processing
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // TODO: Replace with actual Gemini API call
+        // if (GEMINI_API_KEY) {
+        //     const geminiResult = await callGeminiAPI(imageFile, prompt);
+        //     return res.json(geminiResult);
+        // }
+        
+        // Mock response for testing
+        const result = {
+            success: true,
+            imageUrl: `https://picsum.photos/500/600?random=${Date.now()}`,
+            originalPrompt: prompt,
+            processingTime: '2.1s',
+            message: 'AI generation completed successfully! (Demo mode)'
+        };
+        
+        res.json(result);
+        
+        // Clean up uploaded file
+        if (imageFile && fs.existsSync(imageFile.path)) {
+            setTimeout(() => {
+                try {
+                    fs.unlinkSync(imageFile.path);
+                } catch (err) {
+                    console.log('Cleanup error:', err.message);
+                }
+            }, 5000);
+        }
+        
+    } catch (error) {
+        console.error('Generation error:', error);
+        res.status(500).json({ 
+            success: false,
+            error: 'Generation failed',
+            details: error.message 
+        });
+    }
+});
+
+// Handle OPTIONS requests
+app.options('/generate-simple', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.sendStatus(200);
 });
 
 // TODO: Implement Gemini Nano API Integration

@@ -1,5 +1,5 @@
 // Pricing and Payment JavaScript
-const API_BASE = 'http://localhost:8080';
+const API_BASE = window.location.origin;
 
 // Check authentication
 function checkAuth() {

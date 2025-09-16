@@ -1,8 +1,35 @@
 // Smooth scroll animations and interactions for Glow landing page
 
-// Backend API Configuration - PASTE YOUR GEMINI API KEY HERE
-const GEMINI_API_KEY = ""; // <-- PASTE YOUR GEMINI NANO API KEY HERE
-const API_ENDPOINT = "http://localhost:8080/generate";
+// Backend API Configuration
+const API_BASE = window.location.origin; // Use current domain
+const API_ENDPOINT = `${API_BASE}/generate-simple`; // Using simple endpoint for testing
+
+// Simple mode - no auth required for testing
+const SIMPLE_MODE = true;
+
+// Check if user is logged in
+function isLoggedIn() {
+    return SIMPLE_MODE || localStorage.getItem('token') !== null;
+}
+
+// Get auth token
+function getAuthToken() {
+    return localStorage.getItem('token') || 'demo-token';
+}
+
+// Redirect to auth if not logged in
+function requireAuth() {
+    if (SIMPLE_MODE) return true;
+    
+    if (!isLoggedIn()) {
+        showNotification('Please login to generate images', 'error');
+        setTimeout(() => {
+            window.location.href = 'auth.html';
+        }, 1500);
+        return false;
+    }
+    return true;
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all animations and interactions
@@ -534,12 +561,14 @@ function initGenerateButton() {
     if (!generateBtn) return;
     
     generateBtn.addEventListener('click', async () => {
+        // Check authentication first
+        if (!requireAuth()) return;
+        
         const uploadedFile = getUploadedFile();
         const selectedPrompt = getSelectedPrompt();
         
         if (!uploadedFile) {
             showNotification('Please upload a photo first!', 'error');
-            // Scroll to upload section
             document.querySelector('.upload-section')?.scrollIntoView({ behavior: 'smooth' });
             return;
         }
@@ -559,6 +588,9 @@ function initUploadSectionGenerate() {
     if (!generateNowBtn) return;
     
     generateNowBtn.addEventListener('click', async () => {
+        // Check authentication first
+        if (!requireAuth()) return;
+        
         const uploadedFile = getUploadedFile();
         const selectedPrompt = getSelectedPrompt();
         
@@ -622,11 +654,15 @@ function initTemplateButtons() {
 
 // Backend API Integration - Generate AI Look
 async function generateAILook(imageFile, prompt) {
+    const token = getAuthToken();
+    
     // Show loading state
-    const generateBtn = document.getElementById('generate-btn');
-    const originalText = generateBtn.textContent;
-    generateBtn.textContent = 'Generating...';
-    generateBtn.disabled = true;
+    const generateBtn = document.getElementById('generate-now-btn') || document.getElementById('generate-btn');
+    const originalText = generateBtn?.textContent || 'Generate';
+    if (generateBtn) {
+        generateBtn.textContent = 'Generating...';
+        generateBtn.disabled = true;
+    }
     
     // Show loading animation
     showLoadingAnimation();
@@ -637,6 +673,7 @@ async function generateAILook(imageFile, prompt) {
         formData.append('prompt', prompt);
         
         console.log('Sending request to:', API_ENDPOINT);
+        console.log('Form data:', { hasImage: !!imageFile, promptLength: prompt.length });
         
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
@@ -645,6 +682,14 @@ async function generateAILook(imageFile, prompt) {
         
         if (!response.ok) {
             const errorData = await response.json();
+            
+            // Handle specific error cases
+            if (errorData.requiresUpgrade) {
+                hideLoadingAnimation();
+                showUpgradeModal(errorData.currentPlan);
+                return;
+            }
+            
             throw new Error(errorData.error || `API Error: ${response.status}`);
         }
         
@@ -655,7 +700,14 @@ async function generateAILook(imageFile, prompt) {
             // Hide loading and show result
             hideLoadingAnimation();
             displayGeneratedImage(result.imageUrl);
-            showNotification(result.message || 'Your viral look is ready!', 'success');
+            
+            // Show remaining images count
+            const remaining = result.remainingImages;
+            const message = remaining === -1 
+                ? 'Your viral look is ready!' 
+                : `Your viral look is ready! ${remaining} generations remaining.`;
+            
+            showNotification(message, 'success');
         } else {
             throw new Error(result.error || 'Generation failed');
         }
@@ -663,11 +715,23 @@ async function generateAILook(imageFile, prompt) {
     } catch (error) {
         console.error('Generation failed:', error);
         hideLoadingAnimation();
-        showNotification(error.message || 'Generation failed. Please try again.', 'error');
+        
+        if (error.message.includes('401') || error.message.includes('token')) {
+            showNotification('Session expired. Please login again.', 'error');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setTimeout(() => {
+                window.location.href = 'auth.html';
+            }, 2000);
+        } else {
+            showNotification(error.message || 'Generation failed. Please try again.', 'error');
+        }
     } finally {
         // Reset button state
-        generateBtn.textContent = originalText;
-        generateBtn.disabled = false;
+        if (generateBtn) {
+            generateBtn.textContent = originalText;
+            generateBtn.disabled = false;
+        }
     }
 }
 
@@ -851,6 +915,122 @@ function loadTrendingExamples() {
         });
     });
 }
+
+// Show upgrade modal when usage limit exceeded
+function showUpgradeModal(currentPlan) {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div class="upgrade-modal-content">
+            <h3>🚀 Upgrade Required</h3>
+            <p>You've used all your free generations!</p>
+            <p>Current Plan: <strong>${currentPlan}</strong></p>
+            <div class="upgrade-actions">
+                <button class="cta-button primary" onclick="window.location.href='pricing.html'">View Plans</button>
+                <button class="cta-button secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Maybe Later</button>
+            </div>
+        </div>
+    `;
+    
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add modal styles
+    const modalStyle = document.createElement('style');
+    modalStyle.textContent = `
+        .upgrade-modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .upgrade-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+    `;
+    document.head.appendChild(modalStyle);
+}
+
+// Display user status in header
+function displayUserStatus() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.email) {
+        const statusDiv = document.createElement('div');
+        statusDiv.className = 'user-status';
+        statusDiv.innerHTML = `
+            <span>Welcome, ${user.name || user.email}</span>
+            <span class="plan-badge">${user.plan || 'FREE'}</span>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        `;
+        
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 10px 15px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 0.9rem;
+        `;
+        
+        document.body.appendChild(statusDiv);
+    }
+}
+
+// Logout function
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    showNotification('Logged out successfully', 'success');
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
+
+// Show/hide auth buttons based on login status
+function updateAuthUI() {
+    const authButtons = document.getElementById('auth-buttons');
+    const heroButtons = document.querySelector('.hero-buttons');
+    
+    if (isLoggedIn()) {
+        if (authButtons) authButtons.style.display = 'none';
+        if (heroButtons) heroButtons.style.display = 'flex';
+        displayUserStatus();
+    } else {
+        if (authButtons) authButtons.style.display = 'block';
+        if (heroButtons) heroButtons.style.display = 'flex';
+    }
+}
+
+// Initialize user status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateAuthUI();
+});
 
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
