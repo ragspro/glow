@@ -681,7 +681,12 @@ async function generateAILook(imageFile, prompt) {
         });
         
         if (!response.ok) {
-            const errorData = await response.json();
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (e) {
+                throw new Error(`Server Error: ${response.status}`);
+            }
             
             // Handle specific error cases
             if (errorData.requiresUpgrade) {
@@ -693,7 +698,12 @@ async function generateAILook(imageFile, prompt) {
             throw new Error(errorData.error || `API Error: ${response.status}`);
         }
         
-        const result = await response.json();
+        let result;
+        try {
+            result = await response.json();
+        } catch (e) {
+            throw new Error('Invalid server response');
+        }
         console.log('API Response:', result);
         
         if (result.success) {
