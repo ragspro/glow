@@ -41,6 +41,7 @@ class PromptHub {
         this.setupEventListeners();
         this.updateAuthStatus();
         this.setupHeaderAuth();
+        this.handleURLFilter();
     }
     
     setupHeaderAuth() {
@@ -149,7 +150,7 @@ class PromptHub {
                 <img src="${prompt.image}" alt="${prompt.title}" loading="lazy">
                 ${isLocked ? '<div class="lock-overlay"><div class="lock-icon">🔒</div></div>' : ''}
                 ${prompt.trending ? '<div class="trending-badge">🔥 Trending</div>' : ''}
-                ${prompt.aiTool ? `<div class="ai-tool-badge" style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">${prompt.aiTool}</div>` : ''}
+                ${prompt.aiTool ? `<div class="ai-tool-badge" style="position: absolute; bottom: 10px; left: 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">${prompt.aiTool}</div>` : ''}
             </div>
             <div class="card-content">
                 <h3 class="card-title">${prompt.title}</h3>
@@ -224,6 +225,20 @@ class PromptHub {
         this.showToast('🚀 Opening Gemini... Paste your image and send!');
     }
 
+    handleURLFilter() {
+        // Check if there's a filter parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterParam = urlParams.get('filter');
+        
+        if (filterParam) {
+            // Find and activate the corresponding filter button
+            const filterBtn = document.querySelector(`[data-category="${filterParam}"]`);
+            if (filterBtn) {
+                filterBtn.click();
+            }
+        }
+    }
+    
     setupCategoryFilter() {
         const filterBtns = document.querySelectorAll('.filter-btn');
         const grid = document.getElementById('gallery-grid');
@@ -244,7 +259,7 @@ class PromptHub {
                 
                 grid.innerHTML = '';
                 
-                const filteredPrompts = category === 'all' ? allPrompts : allPrompts.filter(p => p.category === category);
+                const filteredPrompts = category === 'all' ? allPrompts : allPrompts.filter(p => p.category === category || p.aiTool?.toLowerCase().includes(category));
                 
                 filteredPrompts.forEach((prompt, index) => {
                     const isLocked = !this.user && prompt.isPremium;

@@ -70,21 +70,84 @@
         </div>
     </section>
 
-    <!-- Featured Prompts Section -->
-    <section class="featured-prompts">
+    <!-- AI Tools Prompts Section -->
+    <section class="ai-tools-prompts">
         <div class="container">
-            <div class="glass-card featured-card">
-                <h2>🔥 Free Preview - Top 3 Viral Prompts</h2>
-                <p style="text-align: center; margin-bottom: 30px; color: var(--text-secondary);">Get a taste of our viral prompt collection. Login to access 15+ premium prompts for all AI tools!</p>
-                
-                <div class="free-prompts-grid" id="free-prompts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin: 30px 0;">
-                    <!-- Free prompts will be loaded here -->
+            <h2 class="section-title" style="text-align: center; margin-bottom: 60px;">🤖 Viral Prompts by AI Tool</h2>
+            
+            <!-- ChatGPT Section -->
+            <div class="glass-card tool-section" style="margin-bottom: 40px;">
+                <div class="tool-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 2rem;">🤖</div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.5rem; color: var(--text-primary);">ChatGPT Prompts</h3>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Text content & social media</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="login-prompt" style="text-align: center; margin-top: 30px; padding: 25px; background: var(--glass-bg); border-radius: 15px; border: 1px solid var(--glass-border);">
-                    <h3 style="margin-bottom: 15px;">🔓 Want More Viral Prompts?</h3>
-                    <p style="margin-bottom: 20px; color: var(--text-secondary);">Login with Google to access our complete collection of 15+ viral AI prompts for ChatGPT, Gemini, Midjourney & more</p>
-                    <button class="cta-button primary" id="google-login-btn" style="font-size: 1.1rem; padding: 15px 30px;">🚀 Login with Google - It's Free!</button>
+                <div class="prompts-grid" id="chatgpt-prompts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <!-- ChatGPT prompts loaded here -->
+                </div>
+                <div style="text-align: center;">
+                    <button class="cta-button secondary view-more-btn" data-category="chatgpt" style="font-size: 0.9rem; padding: 10px 20px;">View More ChatGPT Prompts →</button>
+                </div>
+            </div>
+            
+            <!-- Gemini Section -->
+            <div class="glass-card tool-section" style="margin-bottom: 40px;">
+                <div class="tool-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 2rem;">💎</div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.5rem; color: var(--text-primary);">Gemini Prompts</h3>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Marketing & business copy</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="prompts-grid" id="gemini-prompts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <!-- Gemini prompts loaded here -->
+                </div>
+                <div style="text-align: center;">
+                    <button class="cta-button secondary view-more-btn" data-category="gemini" style="font-size: 0.9rem; padding: 10px 20px;">View More Gemini Prompts →</button>
+                </div>
+            </div>
+            
+            <!-- Midjourney Section -->
+            <div class="glass-card tool-section" style="margin-bottom: 40px;">
+                <div class="tool-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 2rem;">🎨</div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.5rem; color: var(--text-primary);">Midjourney Prompts</h3>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Visual content & images</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="prompts-grid" id="midjourney-prompts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <!-- Midjourney prompts loaded here -->
+                </div>
+                <div style="text-align: center;">
+                    <button class="cta-button secondary view-more-btn" data-category="midjourney" style="font-size: 0.9rem; padding: 10px 20px;">View More Midjourney Prompts →</button>
+                </div>
+            </div>
+            
+            <!-- Veo Section -->
+            <div class="glass-card tool-section" style="margin-bottom: 40px;">
+                <div class="tool-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 2rem;">📹</div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.5rem; color: var(--text-primary);">Veo Prompts</h3>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Video content & scripts</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="prompts-grid" id="veo-prompts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <!-- Veo prompts loaded here -->
+                </div>
+                <div style="text-align: center;">
+                    <button class="cta-button secondary view-more-btn" data-category="veo" style="font-size: 0.9rem; padding: 10px 20px;">View More Veo Prompts →</button>
                 </div>
             </div>
         </div>
@@ -246,15 +309,8 @@
                 }
             });
             
-            // Load free prompts on homepage
-            loadFreePrompts();
-            
-            // Also try loading after a short delay in case DOM isn't ready
-            setTimeout(() => {
-                if (document.getElementById('free-prompts') && document.getElementById('free-prompts').children.length === 0) {
-                    loadFreePrompts();
-                }
-            }, 500);
+            // Load AI tool prompts on homepage
+            loadAIToolPrompts();
         });
         
         function updateHeaderUI() {
@@ -274,102 +330,157 @@
             }
         }
         
-        // Load 3 free prompts for homepage
-        function loadFreePrompts() {
-            const freePromptsContainer = document.getElementById('free-prompts');
-            if (!freePromptsContainer) {
-                console.log('Free prompts container not found');
-                return;
-            }
+        // Load prompts for each AI tool section
+        function loadAIToolPrompts() {
+            // Sample prompts for each AI tool
+            const aiToolPrompts = {
+                chatgpt: [
+                    {
+                        title: "Viral Instagram Post",
+                        prompt: "Create a viral Instagram post about [topic]. Include: Eye-catching hook in first line, 3-5 engaging bullet points, relevant emojis, trending hashtags, call-to-action. Make it shareable and comment-worthy.",
+                        image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "TikTok Script Writer",
+                        prompt: "Create a viral TikTok script for [topic]. Include: Hook in first 3 seconds, trending audio suggestions, visual cues, engagement triggers, hashtag strategy.",
+                        image: "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "LinkedIn Post Creator",
+                        prompt: "Create viral LinkedIn post about [professional topic]. Structure: Personal story/experience, lesson learned, actionable insights, question for engagement.",
+                        image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=500&fit=crop"
+                    }
+                ],
+                gemini: [
+                    {
+                        title: "Email Marketing Sequence",
+                        prompt: "Write a 5-email viral marketing sequence for [product]. Each email: Compelling subject line, story-driven content, value delivery, soft pitch, clear CTA.",
+                        image: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "Product Launch Copy",
+                        prompt: "Write viral product launch copy for [product]. Include: Problem agitation, solution reveal, unique selling proposition, social proof, limited-time offer.",
+                        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "YouTube Thumbnail Text",
+                        prompt: "Generate viral YouTube thumbnail text for [video topic]. Create 3-5 word phrases that are: Bold, curiosity-driven, emotion-triggering, easy to read.",
+                        image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=500&fit=crop"
+                    }
+                ],
+                midjourney: [
+                    {
+                        title: "Viral Meme Template",
+                        prompt: "Create viral meme image: [subject] with exaggerated facial expression, bold text overlay, high contrast colors, trending meme format, shareable design.",
+                        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "Instagram Story Ad",
+                        prompt: "Design Instagram story ad for [product]: Vertical 9:16 format, eye-catching visuals, minimal text, clear product focus, swipe-up CTA, brand colors.",
+                        image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "YouTube Thumbnail Design",
+                        prompt: "Create viral YouTube thumbnail: Shocked face expression, bright colors (red/yellow), bold text overlay, arrow pointing, high contrast, clickbait style.",
+                        image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=500&fit=crop"
+                    }
+                ],
+                veo: [
+                    {
+                        title: "Viral Video Script",
+                        prompt: "Create viral video script for [topic]: Hook in first 5 seconds, engaging storyline, emotional peaks, clear call-to-action, optimized for social media platforms.",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "Product Demo Video",
+                        prompt: "Generate product demo video: [product] showcase with smooth transitions, professional lighting, clear product benefits, engaging background music.",
+                        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=500&fit=crop"
+                    },
+                    {
+                        title: "Brand Story Video",
+                        prompt: "Create brand story video script: Company mission, founder journey, customer testimonials, emotional connection, call-to-action, 60-90 seconds duration.",
+                        image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=500&fit=crop"
+                    }
+                ]
+            };
             
-            console.log('Loading free prompts...');
-            
-            // Sample free prompts (locked for preview)
-            const freePrompts = [
-                {
-                    title: "Viral Instagram Post",
-                    prompt: "Create a viral Instagram post about [topic]. Include: Eye-catching hook in first line, 3-5 engaging bullet points, relevant emojis, trending hashtags, call-to-action. Make it shareable and comment-worthy.",
-                    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=500&fit=crop"
-                },
-                {
-                    title: "YouTube Thumbnail Text", 
-                    prompt: "Generate viral YouTube thumbnail text for [video topic]. Create 3-5 word phrases that are: Bold, curiosity-driven, emotion-triggering, easy to read. Include power words like 'SECRET', 'SHOCKING', 'INSTANT'.",
-                    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=500&fit=crop"
-                },
-                {
-                    title: "Viral Ad Copy",
-                    prompt: "Write viral ad copy for [product/service]. Structure: Attention-grabbing headline, pain point identification, solution presentation, social proof, urgency creator, clear CTA. Keep under 150 words, highly persuasive.",
-                    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop"
-                }
-            ];
-            
-            // Clear existing content
-            freePromptsContainer.innerHTML = '';
-            
-            freePrompts.forEach((prompt, index) => {
-                const card = document.createElement('div');
-                card.className = 'glass-card prompt-card';
-                card.style.cssText = `
-                    background: var(--glass-bg);
-                    backdrop-filter: blur(20px);
-                    border: 1px solid var(--glass-border);
-                    border-radius: 20px;
-                    overflow: hidden;
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                    opacity: 0;
-                    transform: translateY(30px);
-                    animation: fadeInUp 0.6s ease ${index * 0.2}s forwards;
-                `;
+            // Load prompts for each AI tool
+            Object.keys(aiToolPrompts).forEach(tool => {
+                const container = document.getElementById(`${tool}-prompts`);
+                if (!container) return;
                 
-                card.innerHTML = `
-                    <div class="card-image" style="height: 200px; overflow: hidden; position: relative;">
-                        <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
-                        <div class="trending-badge" style="position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 4px 8px; border-radius: 15px; font-size: 11px; font-weight: 600;">🔥 Trending</div>
-                        <div class="lock-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(5px);">
-                            <div style="text-align: center; color: white;">
-                                <div style="font-size: 32px; margin-bottom: 8px;">🔒</div>
-                                <div style="font-size: 14px; font-weight: 500;">Click to unlock</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-content" style="padding: 20px;">
-                        <h3 class="card-title" style="color: var(--text-primary); margin-bottom: 8px; font-size: 18px; font-weight: 600;">${prompt.title}</h3>
-                        <p class="card-prompt" style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 15px;">${prompt.prompt.substring(0, 100)}...</p>
-                        <div class="card-actions" style="display: flex; gap: 8px;">
-                            <button class="unlock-btn" style="flex: 1; padding: 12px 16px; background: var(--secondary-gradient); color: white; border: none; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">🔓 Login to Unlock</button>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML = '';
                 
-                // Add hover effects
-                card.addEventListener('mouseenter', () => {
-                    const overlay = card.querySelector('.lock-overlay');
-                    const img = card.querySelector('.card-image img');
-                    if (overlay) overlay.style.opacity = '1';
-                    if (img) img.style.transform = 'scale(1.05)';
-                    card.style.transform = 'translateY(-5px)';
-                    card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
+                aiToolPrompts[tool].forEach((prompt, index) => {
+                    const card = createPromptCard(prompt, index, tool);
+                    container.appendChild(card);
                 });
-                
-                card.addEventListener('mouseleave', () => {
-                    const overlay = card.querySelector('.lock-overlay');
-                    const img = card.querySelector('.card-image img');
-                    if (overlay) overlay.style.opacity = '0';
-                    if (img) img.style.transform = 'scale(1)';
-                    card.style.transform = 'translateY(0)';
-                    card.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
-                });
-                
-                // Add click handler
-                card.addEventListener('click', () => {
-                    showLoginPopup();
-                });
-                
-                freePromptsContainer.appendChild(card);
             });
             
-            console.log('Free prompts loaded successfully');
+            // Setup view more buttons
+            document.querySelectorAll('.view-more-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const category = btn.dataset.category;
+                    window.location.href = `gallery.html?filter=${category}`;
+                });
+            });
+        }
+        
+        function createPromptCard(prompt, index, tool) {
+            const card = document.createElement('div');
+            card.className = 'glass-card prompt-card';
+            card.style.cssText = `
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 15px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                opacity: 0;
+                transform: translateY(30px);
+                animation: fadeInUp 0.6s ease ${index * 0.1}s forwards;
+            `;
+            
+            const toolIcons = {
+                chatgpt: '🤖',
+                gemini: '💎',
+                midjourney: '🎨',
+                veo: '📹'
+            };
+            
+            card.innerHTML = `
+                <div class="card-image" style="height: 160px; overflow: hidden; position: relative;">
+                    <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="tool-badge" style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">${toolIcons[tool]} ${tool.toUpperCase()}</div>
+                    <div class="trending-badge" style="position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">🔥 Free</div>
+                </div>
+                <div class="card-content" style="padding: 15px;">
+                    <h4 class="card-title" style="color: var(--text-primary); margin-bottom: 8px; font-size: 14px; font-weight: 600;">${prompt.title}</h4>
+                    <p class="card-prompt" style="color: var(--text-secondary); font-size: 12px; line-height: 1.4; margin-bottom: 12px;">${prompt.prompt.substring(0, 80)}...</p>
+                    <div class="card-actions" style="display: flex; gap: 6px;">
+                        <button class="copy-btn" onclick="copyPrompt('${prompt.prompt.replace(/'/g, "\\'")}')" style="flex: 1; padding: 8px 12px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s ease;">📋 Copy</button>
+                        <button class="use-btn" onclick="openInTool('${prompt.prompt.replace(/'/g, "\\'")}', '${tool}')" style="flex: 1; padding: 8px 12px; background: var(--primary-gradient); color: white; border: none; border-radius: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s ease;">🚀 Use</button>
+                    </div>
+                </div>
+            `;
+            
+            // Add hover effects
+            card.addEventListener('mouseenter', () => {
+                const img = card.querySelector('.card-image img');
+                if (img) img.style.transform = 'scale(1.05)';
+                card.style.transform = 'translateY(-3px)';
+                card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const img = card.querySelector('.card-image img');
+                if (img) img.style.transform = 'scale(1)';
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+            });
+            
+            return card;
         }
         
         // Global functions
@@ -385,6 +496,25 @@
             const geminiUrl = `https://gemini.google.com/app?q=${encodeURIComponent(prompt)}`;
             window.open(geminiUrl, '_blank');
             showToast('🚀 Opening Gemini... Paste your image and send!');
+        };
+        
+        window.openInTool = function(prompt, tool) {
+            const toolUrls = {
+                chatgpt: `https://chat.openai.com/?q=${encodeURIComponent(prompt)}`,
+                gemini: `https://gemini.google.com/app?q=${encodeURIComponent(prompt)}`,
+                midjourney: `https://discord.com/channels/@me`,
+                veo: `https://veo.google.com`
+            };
+            
+            const toolNames = {
+                chatgpt: 'ChatGPT',
+                gemini: 'Gemini',
+                midjourney: 'Midjourney Discord',
+                veo: 'Veo'
+            };
+            
+            window.open(toolUrls[tool], '_blank');
+            showToast(`🚀 Opening ${toolNames[tool]}...`);
         };
         
         function showToast(message) {
