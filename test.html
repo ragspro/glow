@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow Setup Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test { margin: 20px 0; padding: 15px; border-radius: 8px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .loading { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+        button { padding: 10px 20px; margin: 10px 5px; border: none; border-radius: 5px; cursor: pointer; }
+        .primary { background: #007bff; color: white; }
+        .secondary { background: #6c757d; color: white; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Glow Prompt Hub - Setup Test</h1>
+    
+    <div id="connection-test" class="test loading">
+        <h3>🔗 Testing Supabase Connection...</h3>
+        <p>Checking database connectivity...</p>
+    </div>
+    
+    <div id="prompts-test" class="test loading">
+        <h3>📝 Testing Prompts Database...</h3>
+        <p>Loading prompts...</p>
+    </div>
+    
+    <div id="auth-test" class="test loading">
+        <h3>🔐 Testing Authentication...</h3>
+        <p>Checking auth system...</p>
+        <button id="login-btn" class="primary" style="display:none;">Test Google Login</button>
+        <button id="logout-btn" class="secondary" style="display:none;">Logout</button>
+    </div>
+    
+    <div id="results" class="test" style="display:none;">
+        <h3>📊 Test Results</h3>
+        <pre id="results-data"></pre>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+        
+        const supabase = createClient(
+            'https://xmponioxmzfftfrowcrf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcG9uaW94bXpmZnRmcm93Y3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMTg1NTQsImV4cCI6MjA3MzU5NDU1NH0.sFIGvTn6q69Z8D2lSW-f0SYRmE2AgLB2Y1ZVm2g0dj4'
+        );
+        
+        let testResults = {};
+        
+        // Test 1: Connection
+        async function testConnection() {
+            try {
+                const { data, error } = await supabase.from('prompts').select('count');
+                if (error) throw error;
+                
+                document.getElementById('connection-test').className = 'test success';
+                document.getElementById('connection-test').innerHTML = `
+                    <h3>✅ Supabase Connection</h3>
+                    <p>Successfully connected to database!</p>
+                `;
+                testResults.connection = 'SUCCESS';
+                return true;
+            } catch (error) {
+                document.getElementById('connection-test').className = 'test error';
+                document.getElementById('connection-test').innerHTML = `
+                    <h3>❌ Supabase Connection Failed</h3>
+                    <p>Error: ${error.message}</p>
+                `;
+                testResults.connection = 'FAILED: ' + error.message;
+                return false;
+            }
+        }
+        
+        // Test 2: Prompts
+        async function testPrompts() {
+            try {
+                const { data: prompts, error } = await supabase
+                    .from('prompts')
+                    .select('*')
+                    .limit(5);
+                
+                if (error) throw error;
+                
+                const freeCount = prompts.filter(p => !p.is_premium).length;
+                const premiumCount = prompts.filter(p => p.is_premium).length;
+                
+                document.getElementById('prompts-test').className = 'test success';
+                document.getElementById('prompts-test').innerHTML = `
+                    <h3>✅ Prompts Database</h3>
+                    <p>Found ${prompts.length} prompts (${freeCount} free, ${premiumCount} premium)</p>
+                    <details>
+                        <summary>Sample prompts:</summary>
+                        <ul>
+                            ${prompts.map(p => `<li><strong>${p.title}</strong> - ${p.is_premium ? 'Premium' : 'Free'}</li>`).join('')}
+                        </ul>
+                    </details>
+                `;
+                testResults.prompts = `SUCCESS: ${prompts.length} prompts loaded`;
+                return true;
+            } catch (error) {
+                document.getElementById('prompts-test').className = 'test error';
+                document.getElementById('prompts-test').innerHTML = `
+                    <h3>❌ Prompts Database Failed</h3>
+                    <p>Error: ${error.message}</p>
+                `;
+                testResults.prompts = 'FAILED: ' + error.message;
+                return false;
+            }
+        }
+        
+        // Test 3: Authentication
+        async function testAuth() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    document.getElementById('auth-test').className = 'test success';
+                    document.getElementById('auth-test').innerHTML = `
+                        <h3>✅ Authentication - Logged In</h3>
+                        <p>Welcome ${session.user.user_metadata.name || session.user.email}!</p>
+                        <button id="logout-btn" class="secondary">Logout</button>
+                    `;
+                    document.getElementById('logout-btn').onclick = logout;
+                    testResults.auth = 'SUCCESS: User logged in';
+                } else {
+                    document.getElementById('auth-test').className = 'test success';
+                    document.getElementById('auth-test').innerHTML = `
+                        <h3>✅ Authentication - Ready</h3>
+                        <p>Auth system is ready. Click to test Google login:</p>
+                        <button id="login-btn" class="primary">Test Google Login</button>
+                    `;
+                    document.getElementById('login-btn').onclick = login;
+                    testResults.auth = 'SUCCESS: Auth system ready';
+                }
+                return true;
+            } catch (error) {
+                document.getElementById('auth-test').className = 'test error';
+                document.getElementById('auth-test').innerHTML = `
+                    <h3>❌ Authentication Failed</h3>
+                    <p>Error: ${error.message}</p>
+                `;
+                testResults.auth = 'FAILED: ' + error.message;
+                return false;
+            }
+        }
+        
+        async function login() {
+            try {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.href
+                    }
+                });
+                if (error) throw error;
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        }
+        
+        async function logout() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                location.reload();
+            } catch (error) {
+                alert('Logout failed: ' + error.message);
+            }
+        }
+        
+        // Show results
+        function showResults() {
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results-data').textContent = JSON.stringify(testResults, null, 2);
+        }
+        
+        // Run all tests
+        async function runTests() {
+            await testConnection();
+            await testPrompts();
+            await testAuth();
+            showResults();
+        }
+        
+        // Listen for auth changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                testAuth();
+            }
+        });
+        
+        // Start tests
+        runTests();
+    </script>
+</body>
+</html>

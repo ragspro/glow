@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glow - Viral AI Looks Instantly</title>
+    <title>Glow - Viral AI Prompt Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID" crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Floating Background Shapes -->
@@ -22,16 +25,16 @@
         <div class="container">
             <div class="hero-content">
                 <h1 class="hero-title" data-parallax>
-                    Transform Into Your
-                    <span class="gradient-text">Viral AI Look</span>
-                    Instantly ✨
+                    Discover
+                    <span class="gradient-text">Viral AI Prompts</span>
+                    That Go Viral ✨
                 </h1>
                 <p class="hero-subtitle">
-                    Upload your photo, choose a trending style, and get stunning AI-generated looks that go viral on social media
+                    Find the hottest AI image prompts that create viral content. Get access to trending prompts used by top creators worldwide.
                 </p>
                 <div class="hero-buttons">
-                    <button class="cta-button primary" id="generate-btn">Generate My Viral Look</button>
-                    <a href="gallery.html" class="cta-button secondary" style="text-decoration: none; display: inline-block; margin-left: 15px;">Browse Prompts</a>
+                    <a href="gallery.html" class="cta-button primary" style="text-decoration: none;">Browse Viral Prompts</a>
+                    <button class="cta-button secondary" id="login-btn">Login for Full Access</button>
                 </div>
                 
                 <!-- Auth buttons for non-logged in users -->
@@ -44,60 +47,21 @@
         </div>
     </section>
 
-    <!-- Upload Section -->
-    <section class="upload-section">
+    <!-- Featured Prompts Section -->
+    <section class="featured-prompts">
         <div class="container">
-            <div class="glass-card upload-card">
-                <h2>Create Your Look</h2>
-                <div class="upload-form">
-                    <div class="upload-area">
-                        <div class="upload-icon">📸</div>
-                        <p>Drop your photo here or click to upload</p>
-                        <input type="file" id="photo-upload" accept="image/*" style="display: none;">
-                        <button class="upload-button" onclick="document.getElementById('photo-upload').click()">Choose File</button>
-                        <div class="uploaded-preview" id="uploaded-preview" style="display: none;">
-                            <img id="preview-image" src="" alt="Preview">
-                            <p id="file-name"></p>
-                        </div>
-                    </div>
-                    <div class="prompt-selector">
-                        <h3>Enter Your Prompt</h3>
-                        <textarea id="custom-prompt" placeholder="Describe the style you want... (e.g., cyberpunk portrait with neon lights, vintage 1970s style, etc.)" class="prompt-input"></textarea>
-                        
-                        <div class="quick-templates">
-                            <h4>Quick Templates:</h4>
-                            <div class="template-buttons">
-                                <button class="template-btn" data-prompt="Transform into a cyberpunk portrait with neon blue and pink lighting, futuristic makeup, glowing eyes, dark urban background">🌆 Cyberpunk</button>
-                                <button class="template-btn" data-prompt="Create a professional corporate headshot with sharp business attire, neutral office background, bright flattering lighting">👔 Professional</button>
-                                <button class="template-btn" data-prompt="Generate a vintage 1970s style portrait with retro clothing, warm faded colors, soft film grain effect">📸 Vintage 70s</button>
-                            </div>
-                        </div>
-                        
-                        <button class="cta-button primary generate-now-btn" id="generate-now-btn" style="margin-top: 25px; width: 100%; font-size: 1.2rem; padding: 18px;">⚡ Generate Now</button>
-                    </div>
+            <div class="glass-card featured-card">
+                <h2>🔥 Free Preview - Top 3 Viral Prompts</h2>
+                <p style="text-align: center; margin-bottom: 30px; color: var(--text-secondary);">Get a taste of our viral prompt collection. Login to access 500+ premium prompts!</p>
+                
+                <div class="free-prompts-grid" id="free-prompts">
+                    <!-- Free prompts will be loaded here -->
                 </div>
-            </div>
-            
-            <!-- Result Display Area -->
-            <div class="result-section" id="result-section" style="display: none; margin-top: 40px;">
-                <div class="glass-card result-container">
-                    <h3 style="text-align: center; margin-bottom: 25px;">🎉 Your AI Generated Look</h3>
-                    <div class="result-image-container">
-                        <img id="result-image" src="" alt="Generated AI Look" class="result-image">
-                        <div class="result-overlay">
-                            <button class="download-btn" onclick="downloadImage()">📥 Download</button>
-                            <button class="share-btn" onclick="shareImage()">📤 Share</button>
-                        </div>
-                    </div>
-                    <div class="result-info">
-                        <p class="result-prompt" id="result-prompt"></p>
-                        <p class="result-time" id="result-time"></p>
-                        <p class="result-message" id="result-message"></p>
-                    </div>
-                    <div class="result-actions">
-                        <button class="cta-button secondary" onclick="generateAnother()">Generate Another</button>
-                        <button class="cta-button primary" onclick="window.location.href='gallery.html'">Browse More Styles</button>
-                    </div>
+                
+                <div class="login-prompt" style="text-align: center; margin-top: 30px; padding: 25px; background: var(--glass-bg); border-radius: 15px; border: 1px solid var(--glass-border);">
+                    <h3 style="margin-bottom: 15px;">🔓 Want More Viral Prompts?</h3>
+                    <p style="margin-bottom: 20px; color: var(--text-secondary);">Login with Google to access our complete collection of 500+ viral AI prompts</p>
+                    <button class="cta-button primary" id="google-login-btn" style="font-size: 1.1rem; padding: 15px 30px;">🚀 Login with Google - It's Free!</button>
                 </div>
             </div>
         </div>
@@ -106,38 +70,38 @@
     <!-- Examples Section -->
     <section class="examples">
         <div class="container">
-            <h2 class="section-title">Trending AI Looks</h2>
+            <h2 class="section-title">Trending Viral Prompts</h2>
             <div class="examples-grid" id="trending-examples">
                 <div class="example-card">
                     <div class="example-image">
-                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=400&fit=crop" alt="Classic 1960s Fashion">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=400&fit=crop" alt="Viral Portrait Style">
                         <div class="prompt-overlay">
-                            <button class="use-prompt-btn" data-prompt="Classic 1960s Indian fashion model wearing a silk saree, black and white vintage photography, timeless retro elegance.">Use This Prompt</button>
+                            <button class="copy-prompt-btn" data-prompt="Professional headshot with cinematic lighting, sharp focus, bokeh background, studio quality, trending on social media">Copy Prompt</button>
                         </div>
                     </div>
-                    <div class="example-caption">Classic 1960s Fashion</div>
+                    <div class="example-caption">Viral Portrait Style</div>
                 </div>
                 <div class="example-card">
                     <div class="example-image">
-                        <img src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=300&h=400&fit=crop" alt="Action Figure Style">
+                        <img src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=300&h=400&fit=crop" alt="Cyberpunk Viral">
                         <div class="prompt-overlay">
-                            <button class="use-prompt-btn" data-prompt="Take this photo of me and turn me into a collectible figurine inside a toy box. The box should include a clear window to show the figurine, bold graphics, and my name on the packaging. Style the figurine in a fun, toy-like way but keep my likeness recognizable.">Use This Prompt</button>
+                            <button class="copy-prompt-btn" data-prompt="Cyberpunk portrait with neon lighting, futuristic aesthetic, glowing eyes, dark urban background, viral social media style">Copy Prompt</button>
                         </div>
                     </div>
-                    <div class="example-caption">Action Figure Style</div>
+                    <div class="example-caption">Cyberpunk Viral</div>
                 </div>
                 <div class="example-card">
                     <div class="example-image">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=400&fit=crop" alt="Vintage 1970s Style">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=400&fit=crop" alt="Vintage Viral">
                         <div class="prompt-overlay">
-                            <button class="use-prompt-btn" data-prompt="Reimagine this image with a vintage, 1970s film photography aesthetic. The person should be dressed in retro-inspired clothing. The colors should be warm and slightly faded, with a soft grain effect.">Use This Prompt</button>
+                            <button class="copy-prompt-btn" data-prompt="Vintage 1970s aesthetic, warm film grain, retro clothing, nostalgic vibes, Instagram viral style">Copy Prompt</button>
                         </div>
                     </div>
-                    <div class="example-caption">Vintage 1970s Style</div>
+                    <div class="example-caption">Vintage Viral</div>
                 </div>
             </div>
             <div class="view-all-container">
-                <a href="gallery.html" class="cta-button secondary">View All Prompts →</a>
+                <a href="gallery.html" class="cta-button secondary">Explore 500+ Viral Prompts →</a>
             </div>
         </div>
     </section>
@@ -148,19 +112,19 @@
             <h2 class="section-title">How It Works</h2>
             <div class="steps-grid">
                 <div class="step-card">
-                    <div class="step-icon">📤</div>
-                    <h3>Upload Photo</h3>
-                    <p>Upload your selfie or portrait photo in any format</p>
+                    <div class="step-icon">🔍</div>
+                    <h3>Browse Prompts</h3>
+                    <p>Discover viral AI prompts used by top creators</p>
                 </div>
                 <div class="step-card">
-                    <div class="step-icon">🎨</div>
-                    <h3>Choose Style</h3>
-                    <p>Select from trending AI prompts and viral looks</p>
+                    <div class="step-icon">📝</div>
+                    <h3>Copy & Use</h3>
+                    <p>Copy prompts and use them in your AI tools</p>
                 </div>
                 <div class="step-card">
-                    <div class="step-icon">✨</div>
-                    <h3>Get Results</h3>
-                    <p>Download your viral-ready AI transformation instantly</p>
+                    <div class="step-icon">🚀</div>
+                    <h3>Go Viral</h3>
+                    <p>Create content that gets millions of views</p>
                 </div>
             </div>
         </div>
@@ -170,16 +134,147 @@
     <section class="final-cta">
         <div class="container">
             <div class="glass-card cta-card">
-                <h2>Ready to Go Viral?</h2>
-                <p>Join thousands creating stunning AI looks every day</p>
-                <div class="email-form">
-                    <input type="email" placeholder="Enter your email" class="email-input">
-                    <button class="cta-button secondary">Get Started Free</button>
+                <h2>Ready to Find Viral Prompts?</h2>
+                <p>Join thousands of creators using our viral AI prompts</p>
+                <div class="cta-buttons" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a href="gallery.html" class="cta-button primary" style="text-decoration: none;">Browse Free Prompts</a>
+                    <button class="cta-button secondary" id="final-login-btn">Login for Full Access</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <script src="script.js"></script>
+    <script type="module">
+        // Import Supabase
+        import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+        
+        const supabaseUrl = 'https://xmponioxmzfftfrowcrf.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcG9uaW94bXpmZnRmcm93Y3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMTg1NTQsImV4cCI6MjA3MzU5NDU1NH0.sFIGvTn6q69Z8D2lSW-f0SYRmE2AgLB2Y1ZVm2g0dj4';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        // Handle login buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginBtns = document.querySelectorAll('#login-btn, #google-login-btn, #final-login-btn');
+            
+            loginBtns.forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    try {
+                        const { data, error } = await supabase.auth.signInWithOAuth({
+                            provider: 'google',
+                            options: {
+                                redirectTo: window.location.origin + '/gallery.html'
+                            }
+                        });
+                        
+                        if (error) throw error;
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        alert('Login failed: ' + error.message);
+                    }
+                });
+            });
+            
+            // Load free prompts on homepage
+            loadFreePrompts();
+        });
+        
+        // Load 3 free prompts for homepage
+        async function loadFreePrompts() {
+            const freePromptsContainer = document.getElementById('free-prompts');
+            if (!freePromptsContainer) return;
+            
+            // Sample free prompts
+            const freePrompts = [
+                {
+                    title: "Cyberpunk Portrait",
+                    prompt: "Professional headshot with cyberpunk aesthetic, neon lighting, futuristic makeup, glowing eyes, dark urban background",
+                    image: "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=300&h=400&fit=crop"
+                },
+                {
+                    title: "Vintage 1970s Style", 
+                    prompt: "Vintage 1970s portrait with retro clothing, warm faded colors, soft film grain effect, nostalgic vibes",
+                    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=400&fit=crop"
+                },
+                {
+                    title: "Professional Headshot",
+                    prompt: "Corporate headshot with sharp business attire, neutral office background, bright flattering lighting, LinkedIn style",
+                    image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=400&fit=crop"
+                }
+            ];
+            
+            freePrompts.forEach(prompt => {
+                const card = document.createElement('div');
+                card.className = 'prompt-card';
+                card.innerHTML = `
+                    <div class="card-image">
+                        <img src="${prompt.image}" alt="${prompt.title}">
+                        <div class="trending-badge">🔥 Trending</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${prompt.title}</h3>
+                        <p class="card-prompt">${prompt.prompt.substring(0, 80)}...</p>
+                        <div class="card-actions">
+                            <button class="copy-btn" onclick="copyPrompt('${prompt.prompt.replace(/'/g, "\\'")}')">📋 Copy</button>
+                            <button class="gemini-btn" onclick="openInGemini('${prompt.prompt.replace(/'/g, "\\'")}')">🚀 Open in Gemini</button>
+                        </div>
+                    </div>
+                `;
+                freePromptsContainer.appendChild(card);
+            });
+        }
+        
+        // Global functions
+        window.copyPrompt = function(prompt) {
+            navigator.clipboard.writeText(prompt).then(() => {
+                showToast('✅ Prompt copied! Paste in Gemini to generate image');
+            }).catch(() => {
+                showToast('❌ Failed to copy prompt');
+            });
+        };
+        
+        window.openInGemini = function(prompt) {
+            const geminiUrl = `https://gemini.google.com/app?q=${encodeURIComponent(prompt)}`;
+            window.open(geminiUrl, '_blank');
+            showToast('🚀 Opening Gemini... Paste your image and send!');
+        };
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast show';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                font-size: 14px;
+                z-index: 1001;
+                transform: translateX(0);
+                transition: transform 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+    
+    <!-- AdSense Ad Unit -->
+    <div style="text-align: center; margin: 40px 0;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-YOUR_ADSENSE_ID"
+             data-ad-slot="YOUR_AD_SLOT_ID"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
 </body>
 </html>

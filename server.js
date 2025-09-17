@@ -153,14 +153,15 @@ app.post('/auth/register', async (req, res) => {
         
         if (error) throw error;
         
-        // Create user profile
+        // Create user profile with unlimited access
         await supabase.from('users').insert({
             id: data.user.id,
             email,
             name,
             plan: 'UNLIMITED',
             images_used: 0,
-            images_limit: -1
+            images_limit: -1,
+            created_at: new Date().toISOString()
         });
         
         const token = jwt.sign({ userId: data.user.id }, JWT_SECRET);

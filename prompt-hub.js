@@ -1,9 +1,42 @@
-// Glow Prompt Hub - Viral Gemini Prompts with Freemium Model
+// Glow Prompt Hub - Viral Gemini Prompts with Supabase Auth
+import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+
+const supabaseUrl = 'https://xmponioxmzfftfrowcrf.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcG9uaW94bXpmZnRmcm93Y3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMTg1NTQsImV4cCI6MjA3MzU5NDU1NH0.sFIGvTn6q69Z8D2lSW-f0SYRmE2AgLB2Y1ZVm2g0dj4';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 class PromptHub {
     constructor() {
-        this.isLoggedIn = localStorage.getItem('glow_logged_in') === 'true';
+        this.user = null;
         this.freePromptLimit = 3;
         this.init();
+    }
+
+    async init() {
+        // Check current session
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            this.user = session.user;
+        }
+
+        // Listen for auth changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                this.user = session.user;
+                this.renderPrompts();
+                this.updateAuthStatus();
+                this.showToast('🎉 Welcome! All prompts unlocked');
+            } else if (event === 'SIGNED_OUT') {
+                this.user = null;
+                this.renderPrompts();
+                this.updateAuthStatus();
+                this.showToast('👋 Logged out');
+            }
+        });
+
+        this.renderPrompts();
+        this.setupEventListeners();
+        this.updateAuthStatus();
     }
 
     init() {
@@ -17,7 +50,7 @@ class PromptHub {
         grid.innerHTML = '';
 
         promptsData.forEach((prompt, index) => {
-            const isLocked = !this.isLoggedIn && index >= this.freePromptLimit;
+            const isLocked = !this.user && index >= this.freePromptLimit;
             const card = this.createPromptCard(prompt, index, isLocked);
             grid.appendChild(card);
         });
@@ -112,7 +145,7 @@ class PromptHub {
         modal.className = 'login-modal';
         modal.innerHTML = `
             <div class="login-content">
-                <h3>🔓 Unlock 30+ Viral Prompts</h3>
+                <h3>🔓 Unlock 500+ Viral Prompts</h3>
                 <p>Login with Google to access all premium prompts</p>
                 <button class="google-login-btn" onclick="promptHub.loginWithGoogle()">
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -129,34 +162,54 @@ class PromptHub {
         document.body.appendChild(modal);
     }
 
-    loginWithGoogle() {
-        // Simulate login (replace with actual Supabase auth)
-        localStorage.setItem('glow_logged_in', 'true');
-        this.isLoggedIn = true;
-        document.querySelector('.login-modal').remove();
-        this.renderPrompts();
-        this.updateAuthStatus();
-        this.showToast('🎉 Welcome! All prompts unlocked');
+    async loginWithGoogle() {
+        try {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin + '/gallery.html'
+                }
+            });
+            
+            if (error) throw error;
+            
+            // Close modal if it exists
+            const modal = document.querySelector('.login-modal');
+            if (modal) modal.remove();
+            
+        } catch (error) {
+            console.error('Login error:', error);
+            this.showToast('❌ Login failed: ' + error.message);
+        }
     }
 
     updateAuthStatus() {
         const authStatus = document.getElementById('auth-status');
-        if (this.isLoggedIn) {
+        if (this.user) {
             authStatus.innerHTML = `
                 <div class="premium-status">
                     <span class="premium-badge">PREMIUM</span>
-                    <span>30+ prompts unlocked • <button class="logout-btn" onclick="promptHub.logout()">Logout</button></span>
+                    <span>Welcome ${this.user.user_metadata.name}! 500+ prompts unlocked • <button class="logout-btn" onclick="promptHub.logout()">Logout</button></span>
+                </div>
+            `;
+        } else {
+            authStatus.innerHTML = `
+                <div class="free-prompts-info">
+                    <span class="free-badge">FREE</span>
+                    <span>3 prompts available • <button class="login-btn" id="login-btn">Login for 500+ prompts</button></span>
                 </div>
             `;
         }
     }
 
-    logout() {
-        localStorage.removeItem('glow_logged_in');
-        this.isLoggedIn = false;
-        this.renderPrompts();
-        this.updateAuthStatus();
-        this.showToast('👋 Logged out');
+    async logout() {
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+        } catch (error) {
+            console.error('Logout error:', error);
+            this.showToast('❌ Logout failed: ' + error.message);
+        }
     }
 
     showToast(message) {
