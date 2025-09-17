@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow - Functionality Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #0a0a0f; color: white; }
+        .test-section { margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .success { border-left: 4px solid #22c55e; }
+        .error { border-left: 4px solid #ef4444; }
+        .warning { border-left: 4px solid #f59e0b; }
+        button { padding: 10px 20px; margin: 5px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .status { font-weight: bold; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Glow Functionality Test</h1>
+    
+    <div class="test-section">
+        <div class="status">📄 Landing Page Test</div>
+        <p>Test if landing page cards are loading properly:</p>
+        <button onclick="testLandingPage()">Test Landing Page</button>
+        <div id="landing-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="status">🎯 Gallery Page Test</div>
+        <p>Test if gallery page prompts are loading:</p>
+        <button onclick="testGalleryPage()">Test Gallery Page</button>
+        <div id="gallery-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="status">🔐 Authentication Test</div>
+        <p>Test Supabase connection:</p>
+        <button onclick="testAuth()">Test Authentication</button>
+        <div id="auth-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="status">📱 Static Prompts Test</div>
+        <p>Test if static prompts are loading:</p>
+        <button onclick="testStaticPrompts()">Test Static Prompts</button>
+        <div id="prompts-result"></div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+        
+        const supabase = createClient(
+            'https://xmponioxmzfftfrowcrf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcG9uaW94bXpmZnRmcm93Y3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMTg1NTQsImV4cCI6MjA3MzU5NDU1NH0.sFIGvTn6q69Z8D2lSW-f0SYRmE2AgLB2Y1ZVm2g0dj4'
+        );
+        
+        window.testLandingPage = function() {
+            const result = document.getElementById('landing-result');
+            result.innerHTML = '<p>🔄 Testing landing page...</p>';
+            
+            // Test if landing page elements exist
+            fetch('/index.html')
+                .then(response => response.text())
+                .then(html => {
+                    const hasCards = html.includes('free-prompts');
+                    const hasAuth = html.includes('profile-dropdown');
+                    const hasGlass = html.includes('glass-card');
+                    
+                    if (hasCards && hasAuth && hasGlass) {
+                        result.innerHTML = '<p class="success">✅ Landing page structure looks good!</p>';
+                    } else {
+                        result.innerHTML = '<p class="error">❌ Landing page missing elements</p>';
+                    }
+                })
+                .catch(err => {
+                    result.innerHTML = '<p class="error">❌ Error loading landing page</p>';
+                });
+        };
+        
+        window.testGalleryPage = function() {
+            const result = document.getElementById('gallery-result');
+            result.innerHTML = '<p>🔄 Testing gallery page...</p>';
+            
+            fetch('/gallery.html')
+                .then(response => response.text())
+                .then(html => {
+                    const hasGrid = html.includes('gallery-grid');
+                    const hasFilters = html.includes('category-filter');
+                    const hasAuth = html.includes('auth-status');
+                    
+                    if (hasGrid && hasFilters && hasAuth) {
+                        result.innerHTML = '<p class="success">✅ Gallery page structure looks good!</p>';
+                    } else {
+                        result.innerHTML = '<p class="error">❌ Gallery page missing elements</p>';
+                    }
+                })
+                .catch(err => {
+                    result.innerHTML = '<p class="error">❌ Error loading gallery page</p>';
+                });
+        };
+        
+        window.testAuth = async function() {
+            const result = document.getElementById('auth-result');
+            result.innerHTML = '<p>🔄 Testing authentication...</p>';
+            
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                result.innerHTML = `<p class="success">✅ Supabase connected! Session: ${session ? 'Active' : 'None'}</p>`;
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Auth error: ${error.message}</p>`;
+            }
+        };
+        
+        window.testStaticPrompts = function() {
+            const result = document.getElementById('prompts-result');
+            result.innerHTML = '<p>🔄 Testing static prompts...</p>';
+            
+            fetch('/static-prompts.js')
+                .then(response => response.text())
+                .then(js => {
+                    const hasPrompts = js.includes('staticPrompts');
+                    const hasCategories = js.includes('promptCategories');
+                    
+                    if (hasPrompts && hasCategories) {
+                        result.innerHTML = '<p class="success">✅ Static prompts file looks good!</p>';
+                    } else {
+                        result.innerHTML = '<p class="error">❌ Static prompts file missing data</p>';
+                    }
+                })
+                .catch(err => {
+                    result.innerHTML = '<p class="error">❌ Error loading static prompts</p>';
+                });
+        };
+        
+        // Auto-run tests
+        setTimeout(() => {
+            testLandingPage();
+            testGalleryPage();
+            testAuth();
+            testStaticPrompts();
+        }, 1000);
+    </script>
+</body>
+</html>
