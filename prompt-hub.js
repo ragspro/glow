@@ -13,28 +13,8 @@ class PromptHub {
     }
 
     async init() {
-        // Wait for global auth manager to initialize
-        setTimeout(async () => {
-            if (window.authManager) {
-                this.user = window.authManager.getUser();
-                console.log('Gallery: Got user from authManager:', this.user);
-            } else {
-                // Fallback to direct Supabase check
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    this.user = session.user;
-                }
-            }
-            
-            this.updateHeaderUI();
-            this.renderPrompts();
-            this.updateAuthStatus();
-            
-            // Force re-render after auth check
-            setTimeout(() => {
-                this.renderPrompts();
-            }, 1000);
-        }, 500);
+        // Initialize with proper auth check
+        this.initializeAuth();
 
         // Listen for auth changes
         supabase.auth.onAuthStateChange((event, session) => {
@@ -61,6 +41,36 @@ class PromptHub {
         this.setupEventListeners();
         this.setupHeaderAuth();
         this.handleURLFilter();
+    }
+    
+    async initializeAuth() {
+        try {
+            // Check current session first
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                this.user = session.user;
+                console.log('Gallery: User found in session:', this.user);
+            }
+            
+            // Also check global auth manager
+            if (window.authManager && window.authManager.getUser()) {
+                this.user = window.authManager.getUser();
+                console.log('Gallery: User found in authManager:', this.user);
+            }
+            
+            // Update UI immediately
+            this.updateHeaderUI();
+            this.updateAuthStatus();
+            this.renderPrompts();
+            
+        } catch (error) {
+            console.error('Auth initialization error:', error);
+            // Fallback to no user
+            this.user = null;
+            this.updateHeaderUI();
+            this.updateAuthStatus();
+            this.renderPrompts();
+        }
     }
     
     setupHeaderAuth() {
@@ -141,11 +151,7 @@ class PromptHub {
         }
     }
 
-    init() {
-        this.renderPrompts();
-        this.setupEventListeners();
-        this.updateAuthStatus();
-    }
+
 
     renderPrompts() {
         const grid = document.getElementById('gallery-grid');
