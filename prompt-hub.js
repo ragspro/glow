@@ -57,6 +57,9 @@ class PromptHub {
             const card = this.createPromptCard(prompt, index, isLocked);
             grid.appendChild(card);
         });
+        
+        // Add category filtering
+        this.setupCategoryFilter();
     }
 
     createPromptCard(prompt, index, isLocked) {
@@ -67,7 +70,8 @@ class PromptHub {
             <div class="card-image">
                 <img src="${prompt.image}" alt="${prompt.title}" loading="lazy">
                 ${isLocked ? '<div class="lock-overlay"><div class="lock-icon">🔒</div></div>' : ''}
-                ${index < 3 ? '<div class="trending-badge">🔥 Trending</div>' : ''}
+                ${prompt.trending ? '<div class="trending-badge">🔥 Trending</div>' : ''}
+                ${prompt.aiTool ? `<div class="ai-tool-badge" style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">${prompt.aiTool}</div>` : ''}
             </div>
             <div class="card-content">
                 <h3 class="card-title">${prompt.title}</h3>
@@ -142,14 +146,45 @@ class PromptHub {
         this.showToast('🚀 Opening Gemini... Paste your image and send!');
     }
 
+    setupCategoryFilter() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const grid = document.getElementById('gallery-grid');
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                filterBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.style.background = 'rgba(255,255,255,0.1)';
+                });
+                btn.classList.add('active');
+                btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                
+                // Filter prompts
+                const category = btn.dataset.category;
+                const allPrompts = window.staticPrompts || [];
+                
+                grid.innerHTML = '';
+                
+                const filteredPrompts = category === 'all' ? allPrompts : allPrompts.filter(p => p.category === category);
+                
+                filteredPrompts.forEach((prompt, index) => {
+                    const isLocked = !this.user && prompt.isPremium;
+                    const card = this.createPromptCard(prompt, index, isLocked);
+                    grid.appendChild(card);
+                });
+            });
+        });
+    }
+    
     showLoginModal() {
         // Create simple login modal
         const modal = document.createElement('div');
         modal.className = 'login-modal';
         modal.innerHTML = `
             <div class="login-content">
-                <h3>🔓 Unlock 500+ Viral Prompts</h3>
-                <p>Login with Google to access all premium prompts</p>
+                <h3>🔓 Unlock 15+ Viral Prompts</h3>
+                <p>Login with Google to access all premium prompts for ChatGPT, Gemini & more</p>
                 <button class="google-login-btn" onclick="promptHub.loginWithGoogle()">
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -192,14 +227,14 @@ class PromptHub {
             authStatus.innerHTML = `
                 <div class="premium-status">
                     <span class="premium-badge">PREMIUM</span>
-                    <span>Welcome ${this.user.user_metadata.name}! 500+ prompts unlocked • <button class="logout-btn" onclick="promptHub.logout()">Logout</button></span>
+                    <span>Welcome ${this.user.user_metadata.name}! 15+ prompts unlocked • <button class="logout-btn" onclick="promptHub.logout()">Logout</button></span>
                 </div>
             `;
         } else {
             authStatus.innerHTML = `
                 <div class="free-prompts-info">
                     <span class="free-badge">FREE</span>
-                    <span>3 prompts available • <button class="login-btn" id="login-btn">Login for 500+ prompts</button></span>
+                    <span>3 prompts available • <button class="login-btn" id="login-btn">Login for 15+ prompts</button></span>
                 </div>
             `;
         }
