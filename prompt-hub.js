@@ -29,6 +29,11 @@ class PromptHub {
             this.updateHeaderUI();
             this.renderPrompts();
             this.updateAuthStatus();
+            
+            // Force re-render after auth check
+            setTimeout(() => {
+                this.renderPrompts();
+            }, 1000);
         }, 500);
 
         // Listen for auth changes
@@ -324,6 +329,7 @@ class PromptHub {
             justify-content: center;
             z-index: 1000;
             backdrop-filter: blur(10px);
+            padding: 20px;
         `;
         
         const toolUrls = {
@@ -334,23 +340,23 @@ class PromptHub {
         };
         
         modal.innerHTML = `
-            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 30px; max-width: 600px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto;">
+            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 25px; max-width: 500px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto;">
                 <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
                 
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;">
-                    <h3 style="color: white; margin-bottom: 10px; font-size: 20px;">${prompt.title}</h3>
-                    <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 600;">${prompt.aiTool}</span>
+                    <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; max-width: 250px; height: 150px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;">
+                    <h3 style="color: white; margin-bottom: 10px; font-size: 18px;">${prompt.title}</h3>
+                    <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 12px; border-radius: 15px; font-size: 11px; font-weight: 600;">${prompt.aiTool}</span>
                 </div>
                 
-                <div style="margin-bottom: 25px;">
-                    <h4 style="color: white; margin-bottom: 10px; font-size: 16px;">Prompt:</h4>
-                    <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; color: rgba(255,255,255,0.9); line-height: 1.5; font-size: 14px;">${prompt.prompt}</div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: white; margin-bottom: 10px; font-size: 14px;">Prompt:</h4>
+                    <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 12px; color: rgba(255,255,255,0.9); line-height: 1.4; font-size: 13px;">${prompt.prompt}</div>
                 </div>
                 
-                <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button onclick="navigator.clipboard.writeText('${prompt.prompt.replace(/'/g, "\\'")}'').then(() => promptHub.showToast('Prompt copied to clipboard!'))" style="flex: 1; padding: 12px 20px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">Copy Prompt</button>
-                    <button onclick="window.open('${toolUrls[prompt.aiTool] || '#'}', '_blank')" style="flex: 1; padding: 12px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">Open ${prompt.aiTool}</button>
+                <div style="display: flex; gap: 8px; justify-content: center; flex-direction: column;">
+                    <button onclick="navigator.clipboard.writeText('${prompt.prompt.replace(/'/g, "\\'")}'').then(() => promptHub.showToast('Prompt copied!'))" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; font-weight: 500; font-size: 14px;">Copy Prompt</button>
+                    <button onclick="window.open('${toolUrls[prompt.aiTool] || '#'}', '_blank')" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; font-size: 14px;">Open ${prompt.aiTool}</button>
                 </div>
             </div>
         `;
