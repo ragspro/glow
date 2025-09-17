@@ -372,28 +372,27 @@
                 animation: fadeInUp 0.6s ease ${index * 0.1}s forwards;
             `;
             
-            const toolIcons = {
-                chatgpt: '🤖',
-                gemini: '💎',
-                midjourney: '🎨',
-                veo: '📹'
+            const toolNames = {
+                chatgpt: 'ChatGPT',
+                gemini: 'Gemini',
+                midjourney: 'Midjourney',
+                veo: 'Veo'
             };
             
             card.innerHTML = `
-                <div class="card-image" style="height: 160px; overflow: hidden; position: relative;">
+                <div class="card-image" style="height: 200px; overflow: hidden; position: relative;">
                     <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
-                    <div class="tool-badge" style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">${toolIcons[tool]} ${tool.toUpperCase()}</div>
-                    <div class="trending-badge" style="position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">🔥 Free</div>
-                </div>
-                <div class="card-content" style="padding: 15px;">
-                    <h4 class="card-title" style="color: var(--text-primary); margin-bottom: 8px; font-size: 14px; font-weight: 600;">${prompt.title}</h4>
-                    <p class="card-prompt" style="color: var(--text-secondary); font-size: 12px; line-height: 1.4; margin-bottom: 12px;">${prompt.prompt.substring(0, 80)}...</p>
-                    <div class="card-actions" style="display: flex; gap: 6px;">
-                        <button class="copy-btn" onclick="copyPrompt('${prompt.prompt.replace(/'/g, "\\'")}')" style="flex: 1; padding: 8px 12px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s ease;">📋 Copy</button>
-                        <button class="use-btn" onclick="openInTool('${prompt.prompt.replace(/'/g, "\\'")}', '${tool}')" style="flex: 1; padding: 8px 12px; background: var(--primary-gradient); color: white; border: none; border-radius: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s ease;">🚀 Use</button>
-                    </div>
+                    <div class="tool-badge" style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 600;">${toolNames[tool]}</div>
                 </div>
             `;
+            
+            // Add click handler to show modal
+            card.addEventListener('click', () => {
+                showPromptModal({
+                    ...prompt,
+                    aiTool: toolNames[tool]
+                });
+            });
             
             // Add hover effects
             card.addEventListener('mouseenter', () => {
@@ -412,6 +411,55 @@
             
             return card;
         }
+        
+        // Modal function for landing page
+        window.showPromptModal = function(prompt) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            `;
+            
+            const toolUrls = {
+                'ChatGPT': 'https://chat.openai.com',
+                'Gemini': 'https://gemini.google.com',
+                'Midjourney': 'https://discord.com/channels/@me',
+                'Veo': 'https://veo.google.com'
+            };
+            
+            modal.innerHTML = `
+                <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 30px; max-width: 600px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto;">
+                    <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;">
+                        <h3 style="color: white; margin-bottom: 10px; font-size: 20px;">${prompt.title}</h3>
+                        <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 600;">${prompt.aiTool}</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: white; margin-bottom: 10px; font-size: 16px;">Prompt:</h4>
+                        <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; color: rgba(255,255,255,0.9); line-height: 1.5; font-size: 14px;">${prompt.prompt}</div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button onclick="navigator.clipboard.writeText('${prompt.prompt.replace(/'/g, "\\'")}'').then(() => showToast('Prompt copied to clipboard!'))" style="flex: 1; padding: 12px 20px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; font-weight: 500;">Copy Prompt</button>
+                        <button onclick="window.open('${toolUrls[prompt.aiTool] || '#'}', '_blank')" style="flex: 1; padding: 12px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500;">Open ${prompt.aiTool}</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        };
         
         // Global functions
         window.copyPrompt = function(prompt) {

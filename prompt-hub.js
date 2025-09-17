@@ -154,26 +154,35 @@ class PromptHub {
     createPromptCard(prompt, index, isLocked) {
         const card = document.createElement('div');
         card.className = `prompt-card ${isLocked ? 'locked' : ''}`;
+        card.style.cursor = 'pointer';
         
         card.innerHTML = `
-            <div class="card-image">
-                <img src="${prompt.image}" alt="${prompt.title}" loading="lazy">
-                ${isLocked ? '<div class="lock-overlay"><div class="lock-icon">🔒</div></div>' : ''}
-                ${prompt.trending ? '<div class="trending-badge">🔥 Trending</div>' : ''}
-                ${prompt.aiTool ? `<div class="ai-tool-badge" style="position: absolute; bottom: 10px; left: 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">${prompt.aiTool}</div>` : ''}
-            </div>
-            <div class="card-content">
-                <h3 class="card-title">${prompt.title}</h3>
-                <p class="card-prompt">${this.truncateText(prompt.prompt, 80)}</p>
-                <div class="card-actions">
-                    ${isLocked ? 
-                        '<button class="unlock-btn">🔓 Login to Unlock</button>' :
-                        `<button class="copy-btn" data-prompt="${this.escapeHtml(prompt.prompt)}">📋 Copy</button>
-                         <button class="gemini-btn" data-prompt="${this.escapeHtml(prompt.prompt)}">🚀 Open in Gemini</button>`
-                    }
-                </div>
+            <div class="card-image" style="position: relative; height: 250px; overflow: hidden; border-radius: 15px;">
+                <img src="${prompt.image}" alt="${prompt.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                ${isLocked ? '<div class="lock-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);"><div class="lock-icon" style="color: white; font-size: 32px;">🔒</div></div>' : ''}
+                ${prompt.aiTool ? `<div class="ai-tool-badge" style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 600;">${prompt.aiTool}</div>` : ''}
             </div>
         `;
+        
+        // Add click handler
+        card.addEventListener('click', () => {
+            if (isLocked) {
+                this.showLoginModal();
+            } else {
+                this.showPromptModal(prompt);
+            }
+        });
+        
+        // Add hover effect
+        card.addEventListener('mouseenter', () => {
+            const img = card.querySelector('img');
+            if (img) img.style.transform = 'scale(1.05)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            const img = card.querySelector('img');
+            if (img) img.style.transform = 'scale(1)';
+        });
 
         return card;
     }
@@ -280,15 +289,77 @@ class PromptHub {
         });
     }
     
+    showPromptModal(prompt) {
+        const modal = document.createElement('div');
+        modal.className = 'prompt-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        `;
+        
+        const toolUrls = {
+            'ChatGPT': 'https://chat.openai.com',
+            'Gemini': 'https://gemini.google.com',
+            'Midjourney': 'https://discord.com/channels/@me',
+            'Veo': 'https://veo.google.com'
+        };
+        
+        modal.innerHTML = `
+            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 30px; max-width: 600px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto;">
+                <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;">
+                    <h3 style="color: white; margin-bottom: 10px; font-size: 20px;">${prompt.title}</h3>
+                    <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 600;">${prompt.aiTool}</span>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: white; margin-bottom: 10px; font-size: 16px;">Prompt:</h4>
+                    <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; color: rgba(255,255,255,0.9); line-height: 1.5; font-size: 14px;">${prompt.prompt}</div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="navigator.clipboard.writeText('${prompt.prompt.replace(/'/g, "\\'")}'').then(() => promptHub.showToast('Prompt copied to clipboard!'))" style="flex: 1; padding: 12px 20px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">Copy Prompt</button>
+                    <button onclick="window.open('${toolUrls[prompt.aiTool] || '#'}', '_blank')" style="flex: 1; padding: 12px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">Open ${prompt.aiTool}</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
     showLoginModal() {
-        // Create simple login modal
         const modal = document.createElement('div');
         modal.className = 'login-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        `;
+        
         modal.innerHTML = `
-            <div class="login-content">
-                <h3>🔓 Unlock 15+ Viral Prompts</h3>
-                <p>Login with Google to access all premium prompts for ChatGPT, Gemini & more</p>
-                <button class="google-login-btn" onclick="promptHub.loginWithGoogle()">
+            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 40px; text-align: center; max-width: 400px; position: relative;">
+                <h3 style="color: white; margin-bottom: 10px; font-size: 24px;">Login Required</h3>
+                <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">Login with Google to access all premium prompts</p>
+                <button onclick="window.authManager.signInWithGoogle(); this.parentElement.parentElement.remove();" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; background: white; color: #333; border: none; border-radius: 10px; font-weight: 500; cursor: pointer;">
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -297,9 +368,10 @@ class PromptHub {
                     </svg>
                     Continue with Google
                 </button>
-                <button class="close-modal" onclick="this.parentElement.parentElement.remove()">×</button>
+                <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
             </div>
         `;
+        
         document.body.appendChild(modal);
     }
 
