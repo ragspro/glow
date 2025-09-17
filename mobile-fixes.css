@@ -1,0 +1,27 @@
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+    
+    .nav-links {
+        gap: 10px !important;
+    }
+    
+    .profile-dropdown {
+        position: relative !important;
+    }
+    
+    .dropdown-menu {
+        position: fixed !important;
+        top: 60px !important;
+        right: 10px !important;
+        left: auto !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .desktop-only {
+        display: block !important;
+    }
+}

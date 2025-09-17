@@ -193,16 +193,19 @@ class PromptHub {
         `;
         
         card.innerHTML = `
-            <div class="card-image" style="position: relative; height: 250px; overflow: hidden;">
+            <div class="card-image" style="position: relative; height: 250px; overflow: hidden; border-radius: 15px;">
                 <img src="${prompt.image}" alt="${prompt.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
                 ${isLocked ? '<div class="lock-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);"><div style="color: white; font-size: 32px;">🔒</div></div>' : ''}
-                ${prompt.aiTool ? `<div class="ai-tool-badge" style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 600;">${prompt.aiTool}</div>` : ''}
+                ${prompt.aiTool ? `<div class="ai-tool-badge" style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 600; z-index: 10;">${prompt.aiTool}</div>` : ''}
+                ${!isLocked ? '<div class="click-hint" style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 10px; font-size: 10px; opacity: 0; transition: opacity 0.3s;">Click to view</div>' : ''}
             </div>
         `;
         
         // Add click handler
-        card.addEventListener('click', () => {
-            console.log('Card clicked, isLocked:', isLocked, 'user:', this.user);
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Card clicked, isLocked:', isLocked, 'user:', this.user, 'prompt:', prompt.title);
             if (isLocked) {
                 this.showLoginModal();
             } else {
@@ -213,14 +216,20 @@ class PromptHub {
         // Add hover effect
         card.addEventListener('mouseenter', () => {
             const img = card.querySelector('img');
+            const hint = card.querySelector('.click-hint');
             if (img) img.style.transform = 'scale(1.05)';
+            if (hint) hint.style.opacity = '1';
             card.style.transform = 'translateY(-5px)';
+            card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.4)';
         });
         
         card.addEventListener('mouseleave', () => {
             const img = card.querySelector('img');
+            const hint = card.querySelector('.click-hint');
             if (img) img.style.transform = 'scale(1)';
+            if (hint) hint.style.opacity = '0';
             card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
         });
 
         return card;
