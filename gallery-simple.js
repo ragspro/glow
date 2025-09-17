@@ -8,30 +8,54 @@ const supabase = createClient(
 
 let currentUser = null;
 
-// Initialize
-document.addEventListener('DOMContentLoaded', async () => {
-    // Check auth
-    const { data: { session } } = await supabase.auth.getSession();
-    currentUser = session?.user || null;
-    
+// Fast initialization
+document.addEventListener('DOMContentLoaded', () => {
+    // Quick UI setup
     updateUI();
     loadPrompts();
     setupEventListeners();
+    
+    // Check auth in background
+    checkAuth();
 });
+
+async function checkAuth() {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user !== currentUser) {
+            currentUser = session?.user || null;
+            updateUI();
+            loadPrompts();
+        }
+    } catch (error) {
+        console.log('Auth check failed');
+    }
+}
 
 function updateUI() {
     const loginBtn = document.getElementById('login-header-btn');
     const profileDropdown = document.getElementById('profile-dropdown');
+    const userName = document.getElementById('user-name');
     const authStatus = document.getElementById('auth-status');
     
     if (currentUser) {
         if (loginBtn) loginBtn.style.display = 'none';
-        if (profileDropdown) profileDropdown.style.display = 'block';
-        if (authStatus) authStatus.innerHTML = '<div class="premium-status"><span class="premium-badge">PREMIUM</span><span>All prompts unlocked</span></div>';
+        if (profileDropdown) {
+            profileDropdown.style.display = 'block';
+            profileDropdown.style.position = 'relative';
+        }
+        if (userName) {
+            userName.textContent = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User';
+        }
+        if (authStatus) {
+            authStatus.innerHTML = '<div class="premium-status" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;"><span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; margin-right: 10px;">PREMIUM</span><span style="color: white;">All prompts unlocked</span></div>';
+        }
     } else {
         if (loginBtn) loginBtn.style.display = 'block';
         if (profileDropdown) profileDropdown.style.display = 'none';
-        if (authStatus) authStatus.innerHTML = '<div class="free-prompts-info"><span class="free-badge">FREE</span><span>3 prompts available • <button id="gallery-login-btn">Login for 15+ prompts</button></span></div>';
+        if (authStatus) {
+            authStatus.innerHTML = '<div class="free-prompts-info" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;"><span style="background: rgba(156, 163, 175, 0.2); color: #9CA3AF; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; margin-right: 10px;">FREE</span><span style="color: white;">3 prompts available • <button id="gallery-login-btn" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px;">Login for 15+ prompts</button></span></div>';
+        }
     }
 }
 
@@ -162,13 +186,31 @@ async function loginWithGoogle() {
 }
 
 function setupEventListeners() {
-    // Profile dropdown
+    // Profile dropdown with fixed positioning
     const profileBtn = document.getElementById('profile-btn');
     const dropdownMenu = document.getElementById('dropdown-menu');
     
-    if (profileBtn) {
-        profileBtn.onclick = () => {
-            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    if (profileBtn && dropdownMenu) {
+        profileBtn.onclick = (e) => {
+            e.stopPropagation();
+            const isVisible = dropdownMenu.style.display === 'block';
+            dropdownMenu.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible) {
+                // Fix positioning
+                const rect = profileBtn.getBoundingClientRect();
+                dropdownMenu.style.position = 'fixed';
+                dropdownMenu.style.top = (rect.bottom + 10) + 'px';
+                dropdownMenu.style.right = (window.innerWidth - rect.right) + 'px';
+                dropdownMenu.style.left = 'auto';
+            }
+        };
+        
+        // Close dropdown when clicking outside
+        document.onclick = (e) => {
+            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
         };
     }
     
@@ -181,12 +223,12 @@ function setupEventListeners() {
         };
     }
     
-    // Login buttons
-    document.addEventListener('click', (e) => {
+    // Login buttons - delegate event handling
+    document.onclick = (e) => {
         if (e.target.id === 'login-header-btn' || e.target.id === 'gallery-login-btn') {
             loginWithGoogle();
         }
-    });
+    };
 }
 
 // Global functions

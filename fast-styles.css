@@ -1,0 +1,33 @@
+/* Fast loading critical styles only */
+.gallery-section { padding: 120px 0 60px; }
+.gallery-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 30px; 
+    margin-bottom: 60px; 
+}
+
+.prompt-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
+}
+
+/* Profile dropdown fixes */
+.profile-dropdown { position: relative !important; }
+.dropdown-menu { 
+    background: rgba(0,0,0,0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.7) !important;
+    z-index: 9999 !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .gallery-grid { 
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+        gap: 20px; 
+    }
+    .nav-links a { display: none; }
+}
