@@ -21,25 +21,29 @@
         <div class="shape shape-3"></div>
     </div>
 
-    <!-- Fixed Header -->
-    <header class="gallery-header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                        <defs>
-                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#667eea"/>
-                                <stop offset="100%" style="stop-color:#764ba2"/>
-                            </linearGradient>
-                        </defs>
-                        <circle cx="20" cy="20" r="18" fill="url(#logoGradient)" opacity="0.8"/>
-                        <circle cx="20" cy="20" r="12" fill="none" stroke="url(#logoGradient)" stroke-width="2"/>
-                        <circle cx="20" cy="20" r="6" fill="url(#logoGradient)"/>
-                    </svg>
-                    <span class="logo-text">Glow</span>
+    <!-- Header with Profile Dropdown -->
+    <header class="main-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); padding: 15px 0;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Glow</span>
+                <span style="color: rgba(255,255,255,0.6); font-size: 14px;">Prompt Hub</span>
+            </div>
+            <div class="nav-links" style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Home</a>
+                <div class="profile-section" id="profile-section">
+                    <button class="login-header-btn" id="login-header-btn" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 500;">Login</button>
+                    <div class="profile-dropdown" id="profile-dropdown" style="display: none; position: relative;">
+                        <button class="profile-btn" id="profile-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 15px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <div class="avatar" style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                            <span id="user-name">User</span>
+                            <span style="font-size: 12px;">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display: none; position: absolute; top: 100%; right: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 0; min-width: 150px; margin-top: 5px;">
+                            <a href="index.html" style="display: block; padding: 10px 20px; color: white; text-decoration: none; font-size: 14px; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">🏠 Home</a>
+                            <button id="logout-btn" style="width: 100%; text-align: left; padding: 10px 20px; background: none; border: none; color: white; font-size: 14px; cursor: pointer; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">🚪 Logout</button>
+                        </div>
+                    </div>
                 </div>
-                <a href="index.html" class="back-link">← Back to Home</a>
             </div>
         </div>
     </header>
@@ -63,7 +67,7 @@
             <div class="auth-status" id="auth-status">
                 <div class="free-prompts-info">
                     <span class="free-badge">FREE</span>
-                    <span>3 prompts available • <button class="login-btn" id="login-btn">Login for 30+ prompts</button></span>
+                    <span>3 prompts available • <button class="login-btn" id="gallery-login-btn">Login for 15+ prompts</button></span>
                 </div>
             </div>
             

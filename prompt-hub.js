@@ -17,17 +17,20 @@ class PromptHub {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
             this.user = session.user;
+            this.updateHeaderUI();
         }
 
         // Listen for auth changes
         supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN') {
                 this.user = session.user;
+                this.updateHeaderUI();
                 this.renderPrompts();
                 this.updateAuthStatus();
                 this.showToast('🎉 Welcome! All prompts unlocked');
             } else if (event === 'SIGNED_OUT') {
                 this.user = null;
+                this.updateHeaderUI();
                 this.renderPrompts();
                 this.updateAuthStatus();
                 this.showToast('👋 Logged out');
@@ -37,6 +40,76 @@ class PromptHub {
         this.renderPrompts();
         this.setupEventListeners();
         this.updateAuthStatus();
+        this.setupHeaderAuth();
+    }
+    
+    setupHeaderAuth() {
+        // Setup header authentication
+        const loginBtns = document.querySelectorAll('#login-header-btn, #gallery-login-btn');
+        
+        loginBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                try {
+                    const { data, error } = await supabase.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: {
+                            redirectTo: 'http://localhost:8080/gallery.html'
+                        }
+                    });
+                    
+                    if (error) throw error;
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showToast('❌ Login failed: ' + error.message);
+                }
+            });
+        });
+        
+        // Profile dropdown functionality
+        const profileBtn = document.getElementById('profile-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        if (profileBtn) {
+            profileBtn.addEventListener('click', () => {
+                dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+        
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    const { error } = await supabase.auth.signOut();
+                    if (error) throw error;
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            });
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.profile-dropdown')) {
+                if (dropdownMenu) dropdownMenu.style.display = 'none';
+            }
+        });
+    }
+    
+    updateHeaderUI() {
+        const loginHeaderBtn = document.getElementById('login-header-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const userName = document.getElementById('user-name');
+        
+        if (this.user) {
+            if (loginHeaderBtn) loginHeaderBtn.style.display = 'none';
+            if (profileDropdown) profileDropdown.style.display = 'block';
+            if (userName) {
+                userName.textContent = this.user.user_metadata.name || this.user.email.split('@')[0];
+            }
+        } else {
+            if (loginHeaderBtn) loginHeaderBtn.style.display = 'block';
+            if (profileDropdown) profileDropdown.style.display = 'none';
+        }
     }
 
     init() {
@@ -51,6 +124,11 @@ class PromptHub {
 
         // Use static prompts data
         const allPrompts = window.staticPrompts || [];
+        
+        if (allPrompts.length === 0) {
+            grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1 / -1;">Loading prompts...</p>';
+            return;
+        }
         
         allPrompts.forEach((prompt, index) => {
             const isLocked = !this.user && prompt.isPremium;
