@@ -54,7 +54,7 @@ class PromptHub {
                     const { data, error } = await supabase.auth.signInWithOAuth({
                         provider: 'google',
                         options: {
-                            redirectTo: 'http://localhost:8080/gallery.html'
+                            redirectTo: 'https://glow.ragspro.com/gallery.html'
                         }
                     });
                     
@@ -298,7 +298,7 @@ class PromptHub {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: 'http://localhost:8080/gallery.html'
+                    redirectTo: 'https://glow.ragspro.com/gallery.html'
                 }
             });
             

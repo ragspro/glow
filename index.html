@@ -193,7 +193,7 @@
                         const { data, error } = await supabase.auth.signInWithOAuth({
                             provider: 'google',
                             options: {
-                                redirectTo: 'http://localhost:8080/index.html'
+                                redirectTo: 'https://glow.ragspro.com/gallery.html'
                             }
                         });
                         
@@ -516,5 +516,30 @@
              (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
     </div>
+    
+    <!-- RAGSPRO Branding Footer -->
+    <footer style="background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); padding: 40px 0; margin-top: 60px;">
+        <div class="container" style="text-align: center;">
+            <div style="margin-bottom: 20px;">
+                <a href="https://ragspro.com" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px;">R</div>
+                    <div>
+                        <div style="font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: -5px;">RAGSPRO</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px;">Digital Solutions</div>
+                    </div>
+                </a>
+            </div>
+            <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px;">Powered by RAGSPRO - Your trusted partner for AI-powered digital solutions</p>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                <a href="https://ragspro.com" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; transition: color 0.3s ease;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">🌐 Website</a>
+                <a href="https://ragspro.com/services" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; transition: color 0.3s ease;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">🚀 Services</a>
+                <a href="https://ragspro.com/contact" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; transition: color 0.3s ease;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">📧 Contact</a>
+                <a href="https://ragspro.com/portfolio" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; transition: color 0.3s ease;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">💼 Portfolio</a>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                <p style="color: rgba(255,255,255,0.5); font-size: 12px; margin: 0;">© 2024 RAGSPRO. All rights reserved. | Built with ❤️ for viral AI content creation</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
