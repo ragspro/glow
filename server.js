@@ -7,17 +7,17 @@ const fs = require('fs');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const { createClient } = require('@supabase/supabase-js');
-const Razorpay = require('razorpay');
+
 const app = express();
 
 // Debug environment variables
 console.log('Environment check:');
-console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY ? 'Set' : 'Missing');
+console.log('ARK_API_KEY:', process.env.ARK_API_KEY ? 'Set' : 'Missing');
 console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'Set' : 'Missing');
 console.log('SUPABASE_SERVICE_KEY:', process.env.SUPABASE_SERVICE_KEY ? 'Set' : 'Missing');
 
 // API Keys from Environment Variables
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const ARK_API_KEY = process.env.ARK_API_KEY;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-jwt-secret-key';
 
 // Supabase Client
@@ -32,70 +32,57 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
     console.log('❌ Supabase credentials missing');
 }
 
-// Razorpay Client
-let razorpay = null;
-if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
-    razorpay = new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID,
-        key_secret: process.env.RAZORPAY_KEY_SECRET
-    });
-    console.log('✅ Razorpay client initialized');
-} else {
-    console.log('⚠️ Razorpay credentials missing - payments disabled');
-}
 
-// Pricing Plans
-const PLANS = {
-    FREE: { name: 'Free', images: 3, price: 0 },
-    BASIC: { name: 'Basic', images: 10, price: 200 },
-    PRO: { name: 'Pro', images: 50, price: 499 },
-    UNLIMITED: { name: 'Unlimited', images: -1, price: 1000 }
-};
 
-// Gemini API Integration Function
-async function generateWithGemini(imageFile, prompt) {
-    try {
-        const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+
+// Seedream API Integration Function
+async function generateWithSeedream(imageFile, prompt) {
+    const imageData = fs.readFileSync(imageFile.path);
+    const base64Image = imageData.toString('base64');
+    const mimeType = imageFile.mimetype;
     
-    try {
-        const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-        
-        // Read image file
-        const imageData = fs.readFileSync(imageFile.path);
-        const base64Image = imageData.toString('base64');
-        
-        const imagePart = {
-            inlineData: {
-                data: base64Image,
-                mimeType: imageFile.mimetype
-            }
-        };
-        
-        const fullPrompt = `Transform this image: ${prompt}. Generate a detailed description of the transformed image.`;
-        
-        const result = await model.generateContent([fullPrompt, imagePart]);
-        const response = await result.response;
-        const text = response.text();
-        
-        // For now, return a demo image with Gemini description
-        // In production, you'd use an image generation API like DALL-E or Midjourney
+    const base64String = `data:${mimeType};base64,${base64Image}`;
+    
+    const requestBody = {
+        model: "seedream-4-0-250828",
+        prompt: prompt,
+        image: base64String,
+        sequential_image_generation: "disabled",
+        response_format: "url",
+        size: "2K",
+        stream: false,
+        watermark: false
+    };
+    
+    const response = await fetch('https://ark.ap-southeast.bytepluses.com/api/v3/images/generations', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${ARK_API_KEY}`
+        },
+        body: JSON.stringify(requestBody)
+    });
+    
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Seedream API error: ${errorData.error?.message || response.statusText}`);
+    }
+    
+    const result = await response.json();
+    
+    if (result.data && result.data[0] && result.data[0].url) {
         return {
             success: true,
-            imageUrl: `https://picsum.photos/500/600?random=${Date.now()}`,
+            imageUrl: result.data[0].url,
             originalPrompt: prompt,
-            geminiDescription: text,
-            processingTime: '3.2s',
-            message: 'AI analysis completed! (Image generation coming soon)'
+            size: result.data[0].size,
+            processingTime: '3.5s',
+            message: '🎨 Real AI transformation completed!',
+            tokensUsed: result.usage?.total_tokens || 0
         };
-        
-    } catch (error) {
-        console.error('Gemini API error:', error);
-        throw error;
-    }
-    } catch (importError) {
-        console.error('Gemini package not available:', importError);
-        throw new Error('Gemini AI service temporarily unavailable');
+    } else {
+        throw new Error('No image generated from Seedream API');
     }
 }
 
@@ -171,9 +158,9 @@ app.post('/auth/register', async (req, res) => {
             id: data.user.id,
             email,
             name,
-            plan: 'FREE',
+            plan: 'UNLIMITED',
             images_used: 0,
-            images_limit: 3
+            images_limit: -1
         });
         
         const token = jwt.sign({ userId: data.user.id }, JWT_SECRET);
@@ -181,7 +168,7 @@ app.post('/auth/register', async (req, res) => {
         res.json({
             success: true,
             token,
-            user: { id: data.user.id, email, name, plan: 'FREE' }
+            user: { id: data.user.id, email, name, plan: 'UNLIMITED' }
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -225,15 +212,7 @@ app.post('/generate', authenticateToken, upload.single('image'), async (req, res
         const imageFile = req.file;
         const user = req.user;
         
-        // Check usage limits
-        if (user.plan !== 'UNLIMITED' && user.images_used >= user.images_limit) {
-            return res.status(403).json({
-                success: false,
-                error: 'Usage limit exceeded',
-                requiresUpgrade: true,
-                currentPlan: user.plan
-            });
-        }
+        // No usage limits - unlimited for all users
         
         if (!imageFile || !prompt) {
             return res.status(400).json({ 
@@ -243,9 +222,7 @@ app.post('/generate', authenticateToken, upload.single('image'), async (req, res
         }
         
         console.log(`Processing for user ${user.email}:`, { 
-            prompt: prompt.substring(0, 50) + '...', 
-            plan: user.plan,
-            usage: `${user.images_used}/${user.images_limit}`
+            prompt: prompt.substring(0, 50) + '...'
         });
         
         // Simulate processing
@@ -260,7 +237,7 @@ app.post('/generate', authenticateToken, upload.single('image'), async (req, res
             message: 'AI generation completed successfully!'
         };
         
-        // Update usage count
+        // Track generation (no limits)
         await supabase
             .from('users')
             .update({ images_used: user.images_used + 1 })
@@ -276,7 +253,7 @@ app.post('/generate', authenticateToken, upload.single('image'), async (req, res
         
         res.json({
             ...result,
-            remainingImages: user.plan === 'UNLIMITED' ? -1 : (user.images_limit - user.images_used - 1)
+            remainingImages: -1 // Unlimited
         });
         
         // Clean up
@@ -296,77 +273,7 @@ app.post('/generate', authenticateToken, upload.single('image'), async (req, res
     }
 });
 
-// Create Payment Order
-app.post('/payment/create-order', authenticateToken, async (req, res) => {
-    try {
-        const { planName } = req.body;
-        const plan = PLANS[planName];
-        
-        if (!plan) {
-            return res.status(400).json({ error: 'Invalid plan' });
-        }
-        
-        const order = await razorpay.orders.create({
-            amount: plan.price * 100, // Amount in paise
-            currency: 'INR',
-            receipt: `order_${Date.now()}`,
-            notes: {
-                userId: req.user.id,
-                planName
-            }
-        });
-        
-        res.json({
-            success: true,
-            orderId: order.id,
-            amount: order.amount,
-            currency: order.currency,
-            plan
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 
-// Verify Payment and Upgrade Plan
-app.post('/payment/verify', authenticateToken, async (req, res) => {
-    try {
-        const { orderId, paymentId, signature, planName } = req.body;
-        const plan = PLANS[planName];
-        
-        // Verify payment signature (simplified)
-        // In production, properly verify using Razorpay webhook
-        
-        // Update user plan
-        await supabase
-            .from('users')
-            .update({
-                plan: planName,
-                images_limit: plan.images,
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', req.user.id);
-        
-        // Record payment
-        await supabase.from('payments').insert({
-            user_id: req.user.id,
-            order_id: orderId,
-            payment_id: paymentId,
-            amount: plan.price,
-            plan: planName,
-            status: 'completed',
-            created_at: new Date().toISOString()
-        });
-        
-        res.json({
-            success: true,
-            message: `Successfully upgraded to ${plan.name} plan!`,
-            newPlan: planName
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 
 // Get User Profile
 app.get('/user/profile', authenticateToken, async (req, res) => {
@@ -376,13 +283,7 @@ app.get('/user/profile', authenticateToken, async (req, res) => {
     });
 });
 
-// Get Pricing Plans
-app.get('/plans', (req, res) => {
-    res.json({
-        success: true,
-        plans: PLANS
-    });
-});
+
 
 // Simple Generate Endpoint (No Auth Required - For Testing)
 app.post('/generate-simple', upload.single('image'), async (req, res) => {
@@ -412,24 +313,28 @@ app.post('/generate-simple', upload.single('image'), async (req, res) => {
         // Simulate processing
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Real Gemini API Integration
-        if (GEMINI_API_KEY) {
+        // Real Seedream API Integration
+        if (ARK_API_KEY) {
             try {
-                const geminiResult = await generateWithGemini(imageFile, prompt);
-                return res.json(geminiResult);
-            } catch (geminiError) {
-                console.error('Gemini API error:', geminiError);
-                // Fallback to demo mode if Gemini fails
+                const seedreamResult = await generateWithSeedream(imageFile, prompt);
+                return res.json(seedreamResult);
+            } catch (seedreamError) {
+                console.error('Seedream API error:', seedreamError);
+                return res.status(500).json({
+                    success: false,
+                    error: 'AI generation failed',
+                    details: seedreamError.message
+                });
             }
         }
         
-        // Demo response if no API key or Gemini fails
+        // Demo response if no API key
         const result = {
             success: true,
             imageUrl: `https://picsum.photos/500/600?random=${Date.now()}`,
             originalPrompt: prompt,
             processingTime: '2.1s',
-            message: GEMINI_API_KEY ? 'AI generation completed!' : 'Demo mode - Add Gemini API key for real generation'
+            message: '🎉 Demo mode! Add ARK_API_KEY for real AI generation.'
         };
         
         res.json(result);
@@ -497,7 +402,7 @@ async function callGeminiNanoAPI(imagePath, prompt, apiKey) {
 app.get('/health', (req, res) => {
     res.json({ 
         status: 'ok', 
-        apiKeyConfigured: !!GEMINI_API_KEY,
+        arkApiKeyConfigured: !!ARK_API_KEY,
         timestamp: new Date().toISOString()
     });
 });
@@ -506,7 +411,7 @@ app.get('/health', (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`🚀 Glow API Server running on port ${PORT}`);
-    console.log(`📝 API Key configured: ${!!GEMINI_API_KEY}`);
+    console.log(`📝 ARK API Key configured: ${!!ARK_API_KEY}`);
     console.log(`🔗 Access at: http://localhost:${PORT}`);
 });
 

@@ -2,7 +2,7 @@
 
 // Backend API Configuration
 const API_BASE = window.location.origin; // Use current domain
-const API_ENDPOINT = `${API_BASE}/api/generate-simple`; // Using simple endpoint for testing
+const API_ENDPOINT = `${API_BASE}/generate-simple`; // Using simple endpoint for testing
 
 // Simple mode - no auth required for testing
 const SIMPLE_MODE = true;

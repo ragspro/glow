@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glow - Prompt Gallery</title>
+    <title>Glow - Viral Prompt Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="prompt-hub.css">
 </head>
 <body>
     <!-- Floating Background Shapes -->
@@ -43,8 +44,16 @@
     <!-- Gallery Section -->
     <section class="gallery-section">
         <div class="container">
-            <h1 class="gallery-title">AI Prompt Gallery</h1>
-            <p class="gallery-subtitle">Discover trending prompts and create your viral look</p>
+            <h1 class="gallery-title">🔥 Viral Prompt Hub</h1>
+            <p class="gallery-subtitle">Copy prompts & generate images FREE with Gemini AI</p>
+            
+            <!-- Auth Status -->
+            <div class="auth-status" id="auth-status">
+                <div class="free-prompts-info">
+                    <span class="free-badge">FREE</span>
+                    <span>3 prompts available • <button class="login-btn" id="login-btn">Login for 30+ prompts</button></span>
+                </div>
+            </div>
             
             <div class="gallery-grid" id="gallery-grid">
                 <!-- Prompt cards loaded dynamically -->
@@ -66,13 +75,13 @@
                 </div>
                 <div class="modal-actions">
                     <button class="cta-button secondary" id="copy-prompt">📋 Copy Prompt</button>
-                    <button class="cta-button primary" id="use-template">✨ Use Template</button>
+                    <button class="cta-button primary" id="open-gemini">🚀 Open in Gemini</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="prompts.js"></script>
-    <script src="script.js"></script>
+    <script src="prompt-hub.js"></script>
 </body>
 </html>
