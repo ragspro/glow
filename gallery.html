@@ -39,7 +39,7 @@
                             <span id="user-name">User</span>
                             <span style="font-size: 12px;">▼</span>
                         </button>
-                        <div class="dropdown-menu" id="dropdown-menu" style="display: none; position: fixed; top: 60px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 8px 0; min-width: 140px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); z-index: 9999;">
+                        <div class="dropdown-menu" id="dropdown-menu" style="display: none; position: absolute; top: 100%; right: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 8px 0; min-width: 140px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); z-index: 9999; margin-top: 10px;">
                             <a href="index.html" style="display: block; padding: 10px 20px; color: white; text-decoration: none; font-size: 14px; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">🏠 Home</a>
                             <button id="logout-btn" style="width: 100%; text-align: left; padding: 10px 20px; background: none; border: none; color: white; font-size: 14px; cursor: pointer; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">🚪 Logout</button>
                         </div>
@@ -99,7 +99,6 @@
     </div>
 
     <script src="static-prompts.js"></script>
-    <script type="module" src="auth-check.js"></script>
-    <script type="module" src="prompt-hub.js"></script>
+    <script type="module" src="gallery-simple.js"></script>
 </body>
 </html>
