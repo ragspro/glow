@@ -8,20 +8,41 @@
         gap: 10px !important;
     }
     
+    .main-header .container {
+        padding: 0 15px !important;
+    }
+    
     .profile-dropdown {
         position: relative !important;
     }
     
     .dropdown-menu {
         position: fixed !important;
-        top: 60px !important;
-        right: 10px !important;
+        top: 70px !important;
+        right: 15px !important;
         left: auto !important;
+        transform: none !important;
+    }
+    
+    .profile-btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+    }
+    
+    .avatar {
+        width: 20px !important;
+        height: 20px !important;
     }
 }
 
 @media (min-width: 769px) {
     .desktop-only {
         display: block !important;
+    }
+    
+    .dropdown-menu {
+        position: absolute !important;
+        top: calc(100% + 10px) !important;
+        right: 0 !important;
     }
 }

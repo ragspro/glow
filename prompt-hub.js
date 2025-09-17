@@ -201,17 +201,31 @@ class PromptHub {
             </div>
         `;
         
-        // Add click handler
-        card.addEventListener('click', (e) => {
+        // Add click handler with debugging
+        card.style.pointerEvents = 'auto';
+        card.style.cursor = 'pointer';
+        
+        const clickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Card clicked, isLocked:', isLocked, 'user:', this.user, 'prompt:', prompt.title);
+            console.log('Card clicked!', {
+                title: prompt.title,
+                isLocked: isLocked,
+                user: !!this.user,
+                prompt: prompt
+            });
+            
             if (isLocked) {
+                console.log('Showing login modal');
                 this.showLoginModal();
             } else {
+                console.log('Showing prompt modal');
                 this.showPromptModal(prompt);
             }
-        });
+        };
+        
+        card.addEventListener('click', clickHandler);
+        card.addEventListener('touchstart', clickHandler);
         
         // Add hover effect
         card.addEventListener('mouseenter', () => {
@@ -338,6 +352,12 @@ class PromptHub {
     }
     
     showPromptModal(prompt) {
+        console.log('Creating modal for:', prompt.title);
+        
+        // Remove any existing modals first
+        const existingModals = document.querySelectorAll('.prompt-modal');
+        existingModals.forEach(modal => modal.remove());
+        
         const modal = document.createElement('div');
         modal.className = 'prompt-modal';
         modal.style.cssText = `
@@ -350,7 +370,7 @@ class PromptHub {
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 10000;
             backdrop-filter: blur(10px);
             padding: 20px;
         `;
@@ -362,9 +382,25 @@ class PromptHub {
             'Veo': 'https://veo.google.com'
         };
         
+        const closeModal = () => {
+            modal.remove();
+        };
+        
+        const copyPrompt = () => {
+            navigator.clipboard.writeText(prompt.prompt).then(() => {
+                this.showToast('Prompt copied!');
+            }).catch(() => {
+                this.showToast('Failed to copy');
+            });
+        };
+        
+        const openTool = () => {
+            window.open(toolUrls[prompt.aiTool] || '#', '_blank');
+        };
+        
         modal.innerHTML = `
             <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 25px; max-width: 500px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto;">
-                <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                <button class="close-modal-btn" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
                 
                 <div style="text-align: center; margin-bottom: 20px;">
                     <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; max-width: 250px; height: 150px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;">
@@ -378,13 +414,26 @@ class PromptHub {
                 </div>
                 
                 <div style="display: flex; gap: 8px; justify-content: center; flex-direction: column;">
-                    <button onclick="navigator.clipboard.writeText('${prompt.prompt.replace(/'/g, "\\'")}'').then(() => promptHub.showToast('Prompt copied!'))" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; font-weight: 500; font-size: 14px;">Copy Prompt</button>
-                    <button onclick="window.open('${toolUrls[prompt.aiTool] || '#'}', '_blank')" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; font-size: 14px;">Open ${prompt.aiTool}</button>
+                    <button class="copy-prompt-btn" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; font-weight: 500; font-size: 14px;">Copy Prompt</button>
+                    <button class="open-tool-btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; font-size: 14px;">Open ${prompt.aiTool}</button>
                 </div>
             </div>
         `;
         
+        // Add event listeners
+        modal.querySelector('.close-modal-btn').addEventListener('click', closeModal);
+        modal.querySelector('.copy-prompt-btn').addEventListener('click', copyPrompt);
+        modal.querySelector('.open-tool-btn').addEventListener('click', openTool);
+        
+        // Close on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
         document.body.appendChild(modal);
+        console.log('Modal added to DOM');
     }
     
     showLoginModal() {
