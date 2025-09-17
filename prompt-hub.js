@@ -49,8 +49,11 @@ class PromptHub {
         const grid = document.getElementById('gallery-grid');
         grid.innerHTML = '';
 
-        promptsData.forEach((prompt, index) => {
-            const isLocked = !this.user && index >= this.freePromptLimit;
+        // Use static prompts data
+        const allPrompts = window.staticPrompts || [];
+        
+        allPrompts.forEach((prompt, index) => {
+            const isLocked = !this.user && prompt.isPremium;
             const card = this.createPromptCard(prompt, index, isLocked);
             grid.appendChild(card);
         });
@@ -71,7 +74,7 @@ class PromptHub {
                 <p class="card-prompt">${this.truncateText(prompt.prompt, 80)}</p>
                 <div class="card-actions">
                     ${isLocked ? 
-                        '<button class="unlock-btn">🔓 Unlock with Login</button>' :
+                        '<button class="unlock-btn">🔓 Login to Unlock</button>' :
                         `<button class="copy-btn" data-prompt="${this.escapeHtml(prompt.prompt)}">📋 Copy</button>
                          <button class="gemini-btn" data-prompt="${this.escapeHtml(prompt.prompt)}">🚀 Open in Gemini</button>`
                     }
@@ -167,7 +170,7 @@ class PromptHub {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin + '/gallery.html'
+                    redirectTo: 'http://localhost:8080/gallery.html'
                 }
             });
             
