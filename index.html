@@ -155,6 +155,7 @@
 
 
 
+    <script type="module" src="auth-check.js"></script>
     <script type="module">
         // Import Supabase
         import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
@@ -176,33 +177,31 @@
             
             // Listen for auth changes
             supabase.auth.onAuthStateChange((event, session) => {
+                console.log('Auth state changed:', event, session);
                 if (event === 'SIGNED_IN') {
                     currentUser = session.user;
                     updateHeaderUI();
+                    showToast('✅ Successfully logged in!');
+                    // Refresh page content if needed
+                    setTimeout(() => {
+                        if (window.location.pathname.includes('gallery')) {
+                            window.location.reload();
+                        }
+                    }, 1000);
                 } else if (event === 'SIGNED_OUT') {
                     currentUser = null;
                     updateHeaderUI();
+                    showToast('👋 Logged out successfully');
                 }
             });
             
-            const loginBtns = document.querySelectorAll('#login-btn, #google-login-btn, #final-login-btn, #login-header-btn');
-            
-            loginBtns.forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    try {
-                        const { data, error } = await supabase.auth.signInWithOAuth({
-                            provider: 'google',
-                            options: {
-                                redirectTo: 'https://glow.ragspro.com/gallery.html'
-                            }
-                        });
-                        
-                        if (error) throw error;
-                    } catch (error) {
-                        console.error('Login error:', error);
-                        alert('Login failed: ' + error.message);
+            // Setup login buttons to use global auth manager
+            document.addEventListener('click', (e) => {
+                if (e.target.matches('#login-btn, #google-login-btn, #final-login-btn, #login-header-btn')) {
+                    if (window.authManager) {
+                        window.authManager.signInWithGoogle();
                     }
-                });
+                }
             });
             
             // Profile dropdown functionality
@@ -217,12 +216,9 @@
             }
             
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', async () => {
-                    try {
-                        const { error } = await supabase.auth.signOut();
-                        if (error) throw error;
-                    } catch (error) {
-                        console.error('Logout error:', error);
+                logoutBtn.addEventListener('click', () => {
+                    if (window.authManager) {
+                        window.authManager.signOut();
                     }
                 });
             }
@@ -242,16 +238,25 @@
             const loginHeaderBtn = document.getElementById('login-header-btn');
             const profileDropdown = document.getElementById('profile-dropdown');
             const userName = document.getElementById('user-name');
+            const avatar = document.querySelector('.avatar');
+            
+            console.log('Updating header UI, currentUser:', currentUser);
             
             if (currentUser) {
-                loginHeaderBtn.style.display = 'none';
-                profileDropdown.style.display = 'block';
+                if (loginHeaderBtn) loginHeaderBtn.style.display = 'none';
+                if (profileDropdown) profileDropdown.style.display = 'block';
                 if (userName) {
                     userName.textContent = currentUser.user_metadata.name || currentUser.email.split('@')[0];
                 }
+                // Update avatar with user's profile picture
+                if (avatar && currentUser.user_metadata.avatar_url) {
+                    avatar.style.backgroundImage = `url(${currentUser.user_metadata.avatar_url})`;
+                    avatar.style.backgroundSize = 'cover';
+                    avatar.style.backgroundPosition = 'center';
+                }
             } else {
-                loginHeaderBtn.style.display = 'block';
-                profileDropdown.style.display = 'none';
+                if (loginHeaderBtn) loginHeaderBtn.style.display = 'block';
+                if (profileDropdown) profileDropdown.style.display = 'none';
             }
         }
         

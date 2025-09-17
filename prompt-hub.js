@@ -22,6 +22,7 @@ class PromptHub {
 
         // Listen for auth changes
         supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Gallery: Auth state changed:', event, session);
             if (event === 'SIGNED_IN') {
                 this.user = session.user;
                 this.updateHeaderUI();
@@ -100,12 +101,21 @@ class PromptHub {
         const loginHeaderBtn = document.getElementById('login-header-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const userName = document.getElementById('user-name');
+        const avatar = document.querySelector('.avatar');
+        
+        console.log('Gallery: Updating header UI, user:', this.user);
         
         if (this.user) {
             if (loginHeaderBtn) loginHeaderBtn.style.display = 'none';
             if (profileDropdown) profileDropdown.style.display = 'block';
             if (userName) {
                 userName.textContent = this.user.user_metadata.name || this.user.email.split('@')[0];
+            }
+            // Update avatar with user's profile picture
+            if (avatar && this.user.user_metadata.avatar_url) {
+                avatar.style.backgroundImage = `url(${this.user.user_metadata.avatar_url})`;
+                avatar.style.backgroundSize = 'cover';
+                avatar.style.backgroundPosition = 'center';
             }
         } else {
             if (loginHeaderBtn) loginHeaderBtn.style.display = 'block';
@@ -320,14 +330,14 @@ class PromptHub {
             authStatus.innerHTML = `
                 <div class="premium-status">
                     <span class="premium-badge">PREMIUM</span>
-                    <span>Welcome ${this.user.user_metadata.name}! 15+ prompts unlocked • <button class="logout-btn" onclick="promptHub.logout()">Logout</button></span>
+                    <span>Welcome ${this.user.user_metadata.name || this.user.email.split('@')[0]}! All prompts unlocked</span>
                 </div>
             `;
         } else {
             authStatus.innerHTML = `
                 <div class="free-prompts-info">
                     <span class="free-badge">FREE</span>
-                    <span>3 prompts available • <button class="login-btn" id="login-btn">Login for 15+ prompts</button></span>
+                    <span>3 prompts available • <button class="login-btn" id="gallery-login-btn">Login for 15+ prompts</button></span>
                 </div>
             `;
         }
