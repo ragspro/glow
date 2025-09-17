@@ -41,9 +41,13 @@ class PromptHub {
             console.log('Gallery: Auth state changed:', event, session);
             if (event === 'SIGNED_IN') {
                 this.user = session.user;
+                console.log('User signed in, updating UI');
                 this.updateHeaderUI();
-                this.renderPrompts();
                 this.updateAuthStatus();
+                // Force re-render prompts to remove locks
+                setTimeout(() => {
+                    this.renderPrompts();
+                }, 100);
                 this.showToast('Welcome! All prompts unlocked');
             } else if (event === 'SIGNED_OUT') {
                 this.user = null;
@@ -155,8 +159,12 @@ class PromptHub {
             return;
         }
         
+        console.log('Rendering prompts, user:', this.user);
+        
         allPrompts.forEach((prompt, index) => {
+            // If user is logged in, no prompts should be locked
             const isLocked = !this.user && prompt.isPremium;
+            console.log(`Prompt ${prompt.title}: isLocked=${isLocked}, isPremium=${prompt.isPremium}, user=${!!this.user}`);
             const card = this.createPromptCard(prompt, index, isLocked);
             grid.appendChild(card);
         });
