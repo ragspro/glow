@@ -1,8 +1,8 @@
 // Test Supabase Connection and Setup
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
 
-const supabaseUrl = 'https://xmponioxmzfftfrowcrf.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcG9uaW94bXpmZnRmcm93Y3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMTg1NTQsImV4cCI6MjA3MzU5NDU1NH0.sFIGvTn6q69Z8D2lSW-f0SYRmE2AgLB2Y1ZVm2g0dj4';
+const supabaseUrl = process.env.SUPABASE_URL || 'your-supabase-url';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || 'your-supabase-anon-key';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 

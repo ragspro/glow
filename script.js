@@ -60,13 +60,27 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTrendingExamples();
 });
 
+// Throttle function for performance optimization
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
 // 3D Parallax effect for hero title
 function initParallaxEffect() {
     const heroTitle = document.querySelector('[data-parallax]');
     
     if (!heroTitle) return;
     
-    document.addEventListener('mousemove', (e) => {
+    const handleMouseMove = throttle((e) => {
         const { clientX, clientY } = e;
         const { innerWidth, innerHeight } = window;
         
@@ -85,7 +99,9 @@ function initParallaxEffect() {
             rotateX(${rotateX}deg)
             rotateY(${rotateY}deg)
         `;
-    });
+    }, 16); // ~60fps
+    
+    document.addEventListener('mousemove', handleMouseMove);
     
     // Reset on mouse leave
     document.addEventListener('mouseleave', () => {
@@ -791,6 +807,12 @@ async function generateAILook(imageFile, prompt) {
 
 // Loading Animation System
 function showLoadingAnimation() {
+    // Remove existing overlay if present
+    const existingOverlay = document.getElementById('loading-overlay');
+    if (existingOverlay) {
+        existingOverlay.remove();
+    }
+    
     const loadingOverlay = document.createElement('div');
     loadingOverlay.id = 'loading-overlay';
     loadingOverlay.innerHTML = `
@@ -824,28 +846,31 @@ function showLoadingAnimation() {
         loadingOverlay.style.opacity = '1';
     }, 100);
     
-    // Add loading spinner styles
-    const spinnerStyle = document.createElement('style');
-    spinnerStyle.textContent = `
-        .loading-content {
-            text-align: center;
-            color: var(--text-primary);
-        }
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid var(--glass-border);
-            border-top: 3px solid var(--neon-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(spinnerStyle);
+    // Add loading spinner styles only if not already present
+    if (!document.getElementById('loading-spinner-styles')) {
+        const spinnerStyle = document.createElement('style');
+        spinnerStyle.id = 'loading-spinner-styles';
+        spinnerStyle.textContent = `
+            .loading-content {
+                text-align: center;
+                color: var(--text-primary);
+            }
+            .loading-spinner {
+                width: 60px;
+                height: 60px;
+                border: 3px solid var(--glass-border);
+                border-top: 3px solid var(--neon-blue);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 20px;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(spinnerStyle);
+    }
 }
 
 function hideLoadingAnimation() {
@@ -860,20 +885,32 @@ function hideLoadingAnimation() {
 
 // Display Generated Image Result
 function displayGeneratedImage(imageUrl) {
+    // Sanitize imageUrl to prevent XSS
+    const sanitizedUrl = encodeURI(imageUrl);
+    
     const resultModal = document.createElement('div');
     resultModal.innerHTML = `
         <div class="result-modal-content">
-            <button class="modal-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            <button class="modal-close">×</button>
             <h3>Your Viral Look is Ready! ✨</h3>
             <div class="result-image">
-                <img src="${imageUrl}" alt="Generated Look">
+                <img src="${sanitizedUrl}" alt="Generated Look">
             </div>
             <div class="result-actions">
-                <button class="cta-button primary" onclick="downloadImage('${imageUrl}')">Download Image</button>
-                <button class="cta-button secondary" onclick="shareImage('${imageUrl}')">Share</button>
+                <button class="cta-button primary" data-action="download">Download Image</button>
+                <button class="cta-button secondary" data-action="share">Share</button>
             </div>
         </div>
     `;
+    
+    // Add secure event listeners instead of onclick
+    const closeBtn = resultModal.querySelector('.modal-close');
+    const downloadBtn = resultModal.querySelector('[data-action="download"]');
+    const shareBtn = resultModal.querySelector('[data-action="share"]');
+    
+    closeBtn.addEventListener('click', () => resultModal.remove());
+    downloadBtn.addEventListener('click', () => downloadImage(sanitizedUrl));
+    shareBtn.addEventListener('click', () => shareImage(sanitizedUrl));
     
     resultModal.style.cssText = `
         position: fixed;
@@ -972,18 +1009,28 @@ function loadTrendingExamples() {
 
 // Show upgrade modal when usage limit exceeded
 function showUpgradeModal(currentPlan) {
+    // Sanitize plan name
+    const sanitizedPlan = currentPlan ? currentPlan.replace(/[<>"'&]/g, '') : 'Unknown';
+    
     const modal = document.createElement('div');
     modal.innerHTML = `
         <div class="upgrade-modal-content">
             <h3>🚀 Upgrade Required</h3>
             <p>You've used all your free generations!</p>
-            <p>Current Plan: <strong>${currentPlan}</strong></p>
+            <p>Current Plan: <strong>${sanitizedPlan}</strong></p>
             <div class="upgrade-actions">
-                <button class="cta-button primary" onclick="window.location.href='pricing.html'">View Plans</button>
-                <button class="cta-button secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Maybe Later</button>
+                <button class="cta-button primary" data-action="upgrade">View Plans</button>
+                <button class="cta-button secondary" data-action="close">Maybe Later</button>
             </div>
         </div>
     `;
+    
+    // Add secure event listeners
+    const upgradeBtn = modal.querySelector('[data-action="upgrade"]');
+    const closeBtn = modal.querySelector('[data-action="close"]');
+    
+    upgradeBtn.addEventListener('click', () => window.location.href = 'pricing.html');
+    closeBtn.addEventListener('click', () => modal.remove());
     
     modal.style.cssText = `
         position: fixed;
@@ -1028,41 +1075,47 @@ function showUpgradeModal(currentPlan) {
 function displayUserStatus() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user.email) {
+        // Sanitize user data
+        const sanitizedName = user.name ? user.name.replace(/[<>"'&]/g, '') : 'User';
+        const sanitizedEmail = user.email ? user.email.replace(/[<>"'&]/g, '') : '';
+        const sanitizedPlan = user.plan ? user.plan.replace(/[<>"'&]/g, '') : 'FREE';
+        const avatarUrl = user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(sanitizedName || sanitizedEmail)}&background=667eea&color=fff&size=40`;
+        
         const profileDropdown = document.createElement('div');
         profileDropdown.className = 'profile-dropdown';
         profileDropdown.innerHTML = `
-            <div class="profile-trigger" onclick="toggleProfileDropdown()">
-                <img src="${user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email)}&background=667eea&color=fff&size=40`}" alt="Profile" class="profile-avatar">
-                <span class="profile-name">${user.name || user.email.split('@')[0]}</span>
+            <div class="profile-trigger">
+                <img src="${avatarUrl}" alt="Profile" class="profile-avatar">
+                <span class="profile-name">${sanitizedName || sanitizedEmail.split('@')[0]}</span>
                 <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
                     <path d="M6 8L2 4h8L6 8z"/>
                 </svg>
             </div>
             <div class="profile-menu" id="profile-menu">
                 <div class="profile-header">
-                    <img src="${user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email)}&background=667eea&color=fff&size=50`}" alt="Profile" class="profile-avatar-large">
+                    <img src="${avatarUrl.replace('size=40', 'size=50')}" alt="Profile" class="profile-avatar-large">
                     <div class="profile-info">
-                        <div class="profile-name-large">${user.name || 'User'}</div>
-                        <div class="profile-email">${user.email}</div>
+                        <div class="profile-name-large">${sanitizedName}</div>
+                        <div class="profile-email">${sanitizedEmail}</div>
                     </div>
                 </div>
                 <div class="profile-plan">
                     <div class="plan-info">
                         <span class="plan-label">Current Plan</span>
-                        <span class="plan-badge ${(user.plan || 'FREE').toLowerCase()}">${user.plan || 'FREE'}</span>
+                        <span class="plan-badge ${sanitizedPlan.toLowerCase()}">${sanitizedPlan}</span>
                     </div>
                     <div class="plan-usage">
                         <span class="usage-text">${user.images_used || 0}/${user.images_limit === -1 ? '∞' : user.images_limit || 3} images used</span>
                     </div>
                 </div>
                 <div class="profile-actions">
-                    <button class="profile-action-btn" onclick="window.location.href='pricing.html'">
+                    <button class="profile-action-btn" data-action="upgrade">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                             <path d="M8 0L10 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6L8 0z"/>
                         </svg>
                         Upgrade Plan
                     </button>
-                    <button class="profile-action-btn" onclick="logout()">
+                    <button class="profile-action-btn" data-action="logout">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                             <path d="M3 3h8v2H3V3zm0 4h8v2H3V7zm0 4h5v2H3v-2zm10-1l-3-3v2H8v2h2v2l3-3z"/>
                         </svg>
@@ -1071,6 +1124,15 @@ function displayUserStatus() {
                 </div>
             </div>
         `;
+        
+        // Add secure event listeners
+        const trigger = profileDropdown.querySelector('.profile-trigger');
+        const upgradeBtn = profileDropdown.querySelector('[data-action="upgrade"]');
+        const logoutBtn = profileDropdown.querySelector('[data-action="logout"]');
+        
+        trigger.addEventListener('click', toggleProfileDropdown);
+        upgradeBtn.addEventListener('click', () => window.location.href = 'pricing.html');
+        logoutBtn.addEventListener('click', logout);
         
         document.body.appendChild(profileDropdown);
     }
@@ -1141,11 +1203,56 @@ function shareImage() {
             title: 'My AI Generated Look from Glow',
             text: 'Check out my viral AI transformation!',
             url: window.location.href
+        }).catch(err => {
+            console.error('Share failed:', err);
+            // Fallback to clipboard
+            copyToClipboard(window.location.href);
         });
     } else {
         // Fallback - copy link
-        navigator.clipboard.writeText(window.location.href);
-        showNotification('Link copied to clipboard!', 'success');
+        copyToClipboard(window.location.href);
+    }
+}
+
+// Secure clipboard copy with error handling
+function copyToClipboard(text) {
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Link copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Clipboard write failed:', err);
+                fallbackCopyToClipboard(text);
+            });
+        } else {
+            fallbackCopyToClipboard(text);
+        }
+    } catch (err) {
+        console.error('Clipboard operation failed:', err);
+        showNotification('Unable to copy to clipboard', 'error');
+    }
+}
+
+// Fallback clipboard copy for older browsers
+function fallbackCopyToClipboard(text) {
+    try {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        if (successful) {
+            showNotification('Link copied to clipboard!', 'success');
+        } else {
+            showNotification('Unable to copy to clipboard', 'error');
+        }
+    } catch (err) {
+        console.error('Fallback copy failed:', err);
+        showNotification('Copy failed. Please copy manually: ' + text.substring(0, 50) + '...', 'error');
     }
 }
 

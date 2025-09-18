@@ -78,20 +78,52 @@ async function generateWithFlux(imageBuffer, prompt) {
     }
 }
 
+// URL validation to prevent SSRF
+function isValidUrl(url) {
+    try {
+        const parsedUrl = new URL(url);
+        // Only allow HTTPS and specific trusted domains
+        const allowedDomains = ['image.pollinations.ai', 'api.replicate.com'];
+        return parsedUrl.protocol === 'https:' && allowedDomains.includes(parsedUrl.hostname);
+    } catch {
+        return false;
+    }
+}
+
+// Input sanitization
+function sanitizePrompt(prompt) {
+    if (typeof prompt !== 'string') return '';
+    // Remove potentially dangerous characters and limit length
+    return prompt.replace(/[<>"'&]/g, '').substring(0, 500);
+}
+
 // Fallback: Simple image generation using Pollinations
 async function generateWithPollinations(prompt) {
     try {
-        const encodedPrompt = encodeURIComponent(`${prompt}, high quality portrait, professional photography`);
+        const sanitizedPrompt = sanitizePrompt(prompt);
+        const encodedPrompt = encodeURIComponent(`${sanitizedPrompt}, high quality portrait, professional photography`);
         const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=500&height=600&seed=${Math.floor(Math.random() * 1000000)}`;
         
-        // Test if image loads
-        const testResponse = await fetch(imageUrl, { method: 'HEAD' });
+        // Validate URL before making request
+        if (!isValidUrl(imageUrl)) {
+            throw new Error('Invalid URL generated');
+        }
+        
+        // Test if image loads with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        const testResponse = await fetch(imageUrl, { 
+            method: 'HEAD',
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
         
         if (testResponse.ok) {
             return {
                 success: true,
                 imageUrl: imageUrl,
-                originalPrompt: prompt,
+                originalPrompt: sanitizedPrompt,
                 processingTime: '2.1s',
                 message: 'AI transformation completed!'
             };
@@ -111,25 +143,35 @@ app.post('/generate-simple', upload.single('image'), async (req, res) => {
         const { prompt } = req.body;
         const imageFile = req.file;
         
+        // Input validation
+        if (!prompt || typeof prompt !== 'string' || prompt.length > 1000) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Invalid prompt. Must be a string under 1000 characters.' 
+            });
+        }
+        
+        if (!imageFile || !imageFile.buffer) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Valid image file is required' 
+            });
+        }
+        
+        // File size validation
+        if (imageFile.size > 10 * 1024 * 1024) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Image file too large. Maximum 10MB allowed.' 
+            });
+        }
+        
         console.log('Generation request:', {
             hasPrompt: !!prompt,
             hasFile: !!imageFile,
+            fileSize: imageFile.size,
             geminiKey: process.env.GEMINI_API_KEY ? 'Present' : 'Missing'
         });
-        
-        if (!prompt) {
-            return res.status(400).json({ 
-                success: false,
-                error: 'Prompt is required' 
-            });
-        }
-        
-        if (!imageFile) {
-            return res.status(400).json({ 
-                success: false,
-                error: 'Image file is required' 
-            });
-        }
         
         // Try real AI image generation
         try {

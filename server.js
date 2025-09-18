@@ -6,9 +6,18 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
+
+// Security middleware
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+});
 
 // Debug environment variables
 console.log('Environment check:');
@@ -97,6 +106,14 @@ app.use(express.static('.'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Secure string comparison to prevent timing attacks
+function secureCompare(a, b) {
+    if (a.length !== b.length) {
+        return false;
+    }
+    return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
+
 // Authentication Middleware
 const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -125,21 +142,47 @@ const authenticateToken = async (req, res, next) => {
     }
 };
 
-// Configure multer for file uploads
+// CSRF Protection Middleware
+const csrfProtection = (req, res, next) => {
+    const token = req.headers['x-csrf-token'] || req.body._csrf;
+    const sessionToken = req.session?.csrfToken;
+    
+    if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') {
+        return next();
+    }
+    
+    // Skip CSRF for simple endpoint (demo mode)
+    if (req.path === '/generate-simple') {
+        return next();
+    }
+    
+    if (!token || !sessionToken || !secureCompare(token, sessionToken)) {
+        return res.status(403).json({ error: 'Invalid CSRF token' });
+    }
+    
+    next();
+};
+
+// Secure file upload configuration
 const upload = multer({ 
-    dest: 'uploads/',
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    dest: path.resolve(__dirname, 'uploads/'), // Prevent path traversal
+    limits: { 
+        fileSize: 10 * 1024 * 1024, // 10MB limit
+        files: 1 // Only one file
+    },
     fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('image/')) {
+        // Strict file type validation
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (allowedTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Only image files are allowed'));
+            cb(new Error('Only JPEG, PNG, WebP, and GIF images are allowed'));
         }
     }
 });
 
 // User Registration
-app.post('/auth/register', async (req, res) => {
+app.post('/auth/register', csrfProtection, async (req, res) => {
     try {
         const { email, password, name } = req.body;
         
@@ -177,7 +220,7 @@ app.post('/auth/register', async (req, res) => {
 });
 
 // User Login
-app.post('/auth/login', async (req, res) => {
+app.post('/auth/login', csrfProtection, async (req, res) => {
     try {
         const { email, password } = req.body;
         
@@ -207,7 +250,7 @@ app.post('/auth/login', async (req, res) => {
 });
 
 // Generate AI Look Endpoint (Protected)
-app.post('/generate', authenticateToken, upload.single('image'), async (req, res) => {
+app.post('/generate', authenticateToken, csrfProtection, upload.single('image'), async (req, res) => {
     try {
         const { prompt } = req.body;
         const imageFile = req.file;
@@ -288,6 +331,14 @@ app.get('/user/profile', authenticateToken, async (req, res) => {
 
 // Simple Generate Endpoint (No Auth Required - For Testing)
 app.post('/generate-simple', upload.single('image'), async (req, res) => {
+    // Input validation
+    const { prompt } = req.body;
+    if (!prompt || typeof prompt !== 'string' || prompt.length > 1000) {
+        return res.status(400).json({ 
+            success: false,
+            error: 'Invalid prompt. Must be a string under 1000 characters.' 
+        });
+    }
     // Add CORS headers
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');

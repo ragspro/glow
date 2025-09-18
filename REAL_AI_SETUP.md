@@ -28,8 +28,8 @@ npm install openai
 
 ### **2. Environment Variables:**
 ```env
-OPENAI_API_KEY=your_openai_key
-GEMINI_API_KEY=AIzaSyADNwtbNuujiS_grE9lOqap2dUQFtZDpPs
+OPENAI_API_KEY=[YOUR_OPENAI_API_KEY]
+GEMINI_API_KEY=[YOUR_GEMINI_API_KEY]
 ```
 
 ### **3. Hybrid Approach:**
