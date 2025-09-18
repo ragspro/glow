@@ -75,6 +75,25 @@
         <div class="container">
             <h2 class="section-title" style="text-align: center; margin-bottom: 60px;">🤖 Viral Prompts by AI Tool</h2>
             
+            <!-- Gemini Section -->
+            <div class="glass-card tool-section" style="margin-bottom: 40px;">
+                <div class="tool-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 2rem;">💎</div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.5rem; color: var(--text-primary);">Gemini Prompts</h3>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">AI Portrait & Image Generation</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="prompts-grid" id="gemini-prompts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <!-- Gemini prompts loaded here -->
+                </div>
+                <div style="text-align: center;">
+                    <button class="cta-button secondary view-more-btn" data-category="gemini" style="font-size: 0.9rem; padding: 10px 20px;">View More Gemini Prompts →</button>
+                </div>
+            </div>
+            
             <!-- ChatGPT Section -->
             <div class="glass-card tool-section" style="margin-bottom: 40px;">
                 <div class="tool-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
@@ -91,25 +110,6 @@
                 </div>
                 <div style="text-align: center;">
                     <button class="cta-button secondary view-more-btn" data-category="chatgpt" style="font-size: 0.9rem; padding: 10px 20px;">View More ChatGPT Prompts →</button>
-                </div>
-            </div>
-            
-            <!-- Gemini Section -->
-            <div class="glass-card tool-section" style="margin-bottom: 40px;">
-                <div class="tool-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="font-size: 2rem;">💎</div>
-                        <div>
-                            <h3 style="margin: 0; font-size: 1.5rem; color: var(--text-primary);">Gemini Prompts</h3>
-                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Marketing & business copy</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="prompts-grid" id="gemini-prompts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
-                    <!-- Gemini prompts loaded here -->
-                </div>
-                <div style="text-align: center;">
-                    <button class="cta-button secondary view-more-btn" data-category="gemini" style="font-size: 0.9rem; padding: 10px 20px;">View More Gemini Prompts →</button>
                 </div>
             </div>
             
@@ -283,19 +283,19 @@
                 ],
                 gemini: [
                     {
-                        title: "Email Marketing Sequence",
-                        prompt: "Write a 5-email viral marketing sequence for [product]. Each email: Compelling subject line, story-driven content, value delivery, soft pitch, clear CTA.",
-                        image: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&h=500&fit=crop"
+                        title: "Golden Hour Coastline",
+                        prompt: "Generate a stunning golden hour coastline portrait with ocean backdrop, warm sunset lighting, flowing hair, beach attire, natural glow, seaside atmosphere, romantic mood, coastal beauty.",
+                        image: "images/prompts/Golden Hour Coastline.jpg"
                     },
                     {
-                        title: "Product Launch Copy",
-                        prompt: "Write viral product launch copy for [product]. Include: Problem agitation, solution reveal, unique selling proposition, social proof, limited-time offer.",
-                        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop"
+                        title: "Vintage 1970s Style",
+                        prompt: "Generate a retro 1970s style portrait with vintage fashion, retro hairstyle, warm color palette, nostalgic atmosphere, classic beauty, period-accurate styling, timeless charm.",
+                        image: "images/prompts/Vintage 1970s Style.jpg"
                     },
                     {
-                        title: "YouTube Thumbnail Text",
-                        prompt: "Generate viral YouTube thumbnail text for [video topic]. Create 3-5 word phrases that are: Bold, curiosity-driven, emotion-triggering, easy to read.",
-                        image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=500&fit=crop"
+                        title: "Classic Corporate Headshot",
+                        prompt: "Generate a professional corporate headshot with clean background, business attire, confident expression, professional lighting, sharp focus, executive style, suitable for LinkedIn and business profiles.",
+                        image: "images/prompts/Classic Corporate Headshot.jpg"
                     }
                 ],
                 midjourney: [
