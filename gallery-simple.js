@@ -10,9 +10,17 @@ let currentUser = null;
 
 // Fast initialization
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing...');
+    
     // Quick UI setup
     updateUI();
-    loadPrompts();
+    
+    // Load prompts with delay to ensure static-prompts.js is loaded
+    setTimeout(() => {
+        console.log('Loading prompts...');
+        loadPrompts();
+    }, 100);
+    
     setupEventListeners();
     
     // Check auth in background
@@ -61,17 +69,74 @@ function updateUI() {
 
 function loadPrompts(filterCategory = 'all') {
     const grid = document.getElementById('gallery-grid');
-    if (!grid || !window.staticPrompts) return;
+    if (!grid) return;
+    
+    // Fallback prompts if static-prompts.js not loaded
+    const prompts = window.staticPrompts || [
+        {
+            title: "Viral Instagram Post",
+            prompt: "Create a viral Instagram post about [topic]. Include: Eye-catching hook in first line, 3-5 engaging bullet points, relevant emojis, trending hashtags, call-to-action. Make it shareable and comment-worthy.",
+            image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=500&fit=crop",
+            category: "chatgpt",
+            isPremium: false,
+            aiTool: "ChatGPT"
+        },
+        {
+            title: "Email Marketing Sequence",
+            prompt: "Write a 5-email viral marketing sequence for [product]. Each email: Compelling subject line, story-driven content, value delivery, soft pitch, clear CTA.",
+            image: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&h=500&fit=crop",
+            category: "gemini",
+            isPremium: false,
+            aiTool: "Gemini"
+        },
+        {
+            title: "Viral Meme Template",
+            prompt: "Create viral meme image: [subject] with exaggerated facial expression, bold text overlay, high contrast colors, trending meme format, shareable design.",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop",
+            category: "midjourney",
+            isPremium: false,
+            aiTool: "Midjourney"
+        },
+        {
+            title: "Viral Video Script",
+            prompt: "Create viral video script for [topic]: Hook in first 5 seconds, engaging storyline, emotional peaks, clear call-to-action, optimized for social media platforms.",
+            image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=500&fit=crop",
+            category: "veo",
+            isPremium: false,
+            aiTool: "Veo"
+        },
+        {
+            title: "TikTok Script Writer",
+            prompt: "Create a viral TikTok script for [topic]. Include: Hook in first 3 seconds, trending audio suggestions, visual cues, engagement triggers, hashtag strategy.",
+            image: "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?w=400&h=500&fit=crop",
+            category: "chatgpt",
+            isPremium: true,
+            aiTool: "ChatGPT"
+        },
+        {
+            title: "Product Launch Copy",
+            prompt: "Write viral product launch copy for [product]. Include: Problem agitation, solution reveal, unique selling proposition, social proof, limited-time offer.",
+            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop",
+            category: "gemini",
+            isPremium: true,
+            aiTool: "Gemini"
+        }
+    ];
     
     grid.innerHTML = '';
     
     // Filter prompts based on category
-    let filteredPrompts = window.staticPrompts;
+    let filteredPrompts = prompts;
     if (filterCategory !== 'all') {
-        filteredPrompts = window.staticPrompts.filter(prompt => 
+        filteredPrompts = prompts.filter(prompt => 
             prompt.category === filterCategory || 
             prompt.aiTool?.toLowerCase().includes(filterCategory)
         );
+    }
+    
+    if (filteredPrompts.length === 0) {
+        grid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7); grid-column: 1 / -1; padding: 40px;">No prompts found for this category.</p>';
+        return;
     }
     
     filteredPrompts.forEach((prompt, index) => {
