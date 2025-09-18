@@ -1,212 +1,205 @@
-// Static prompts data for immediate loading - Organized by categories
+// Static prompts data for immediate loading - Gemini AI Focus
 window.staticPrompts = [
-    // FREE PROMPTS (3)
+    // 3D Figurine Prompts
     {
-        title: "Viral Instagram Post Creator",
-        prompt: "Create a viral Instagram post about [topic]. Include: Eye-catching hook in first line, 3-5 engaging bullet points, relevant emojis, trending hashtags, call-to-action. Make it shareable and comment-worthy.",
-        image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=500&fit=crop",
-        category: "chatgpt",
-        isPremium: false,
-        trending: true,
-        aiTool: "ChatGPT"
-    },
-    {
-        title: "Golden Hour Coastline",
-        prompt: "Generate a stunning golden hour coastline portrait with ocean backdrop, warm sunset lighting, flowing hair, beach attire, natural glow, seaside atmosphere, romantic mood, coastal beauty.",
-        image: "images/prompts/Golden Hour Coastline.jpg",
+        title: "Official Google Gemini 3D Figurine",
+        prompt: "Create a 1/7 scale commercialized figurine of the characters in the picture, in a realistic style, in a real environment. The figurine is placed on a computer desk. The figurine has a round transparent acrylic base, with no text on the base. Next to the computer is a toy packaging box, designed in a style reminiscent of high-quality collectible figures, printed with original artwork.",
+        image: "images/prompts/gemini-figurine.jpg",
         category: "gemini",
         isPremium: false,
         trending: true,
         aiTool: "Gemini"
     },
     {
-        title: "Vintage 1970s Style",
-        prompt: "Generate a retro 1970s style portrait with vintage fashion, retro hairstyle, warm color palette, nostalgic atmosphere, classic beauty, period-accurate styling, timeless charm.",
-        image: "images/prompts/Vintage 1970s Style.jpg",
+        title: "Action Figure Toy Box",
+        prompt: "Take this photo of me and turn me into a collectible figurine inside a toy box. The box should include a clear window to show the figurine, bold graphics, and my name on the packaging. Style the figurine in a fun, toy-like way but keep my likeness recognizable.",
+        image: "images/prompts/action-figure.jpg",
         category: "gemini",
         isPremium: false,
         trending: true,
         aiTool: "Gemini"
     },
     {
-        title: "Classic Corporate Headshot",
-        prompt: "Generate a professional corporate headshot with clean background, business attire, confident expression, professional lighting, sharp focus, executive style, suitable for LinkedIn and business profiles.",
-        image: "images/prompts/Classic Corporate Headshot.jpg",
+        title: "Biopunk Cyber Figurine",
+        prompt: "Transform this person into a biopunk figurine where technology and biology have merged. Their 'armor' is a semi-translucent, bioluminescent exoskeleton that pulses with a soft, glowing pattern of banana leaves in electric blue and magenta. Their cybernetic enhancements appear grown rather than built, with glowing veins visible beneath their skin. The background is a futuristic cityscape where bio-engineered flora intertwines with skyscrapers, and massive, glowing banana plants serve as streetlights. The air is thick with neon rain, creating an ethereal, glowing aura around the figure.",
+        image: "images/prompts/biopunk-cyber.jpg",
         category: "gemini",
         isPremium: false,
         trending: true,
         aiTool: "Gemini"
     },
-    
-    // PREMIUM PROMPTS - CHATGPT/GEMINI TEXT PROMPTS
     {
-        title: "Viral TikTok Script Writer",
-        prompt: "Create a viral TikTok script for [topic]. Include: Hook in first 3 seconds, trending audio suggestions, visual cues, engagement triggers, hashtag strategy. Format: Scene-by-scene breakdown with timing.",
-        image: "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?w=400&h=500&fit=crop",
-        category: "chatgpt",
-        isPremium: true,
-        trending: false,
-        aiTool: "ChatGPT"
-    },
-
-    {
-        title: "Autumn Countryside Portrait",
-        prompt: "Create a warm autumn countryside portrait with golden hour lighting, rustic background, cozy sweater, natural makeup, soft smile, falling leaves, vintage film aesthetic, professional photography style.",
-        image: "images/prompts/Autumn Countryside Portrait.jpg",
+        title: "Feywild Enchanter Figurine",
+        prompt: "Reimagine this person as a Feywild Enchanter figurine, as if they are one with nature. Their robes appear to be made of woven leaves and petals, with subtle golden banana patterns integrated into the fabric. They hold a staff of gnarled, glowing wood that has naturally grown into the shape of a banana, emitting magical pollen-like sparkles. A crown of intertwined, glowing vines forming a banana shape rests above their head. Set them in a whimsical, enchanted grove where the air is thick with a shimmering, magical mist and the flora glows with a soft, bioluminescent light.",
+        image: "images/prompts/feywild-enchanter.jpg",
         category: "gemini",
         isPremium: true,
         trending: false,
         aiTool: "Gemini"
     },
     {
-        title: "Blooming Garden Portrait",
-        prompt: "Generate a beautiful garden portrait surrounded by blooming flowers, soft natural lighting, floral dress, fresh makeup, peaceful expression, botanical background, spring vibes, dreamy atmosphere.",
-        image: "images/prompts/Blooming Garden Portrait.jpg",
+        title: "Chibi Style Figurine",
+        prompt: "Transform this person into a sweet, dessert-themed chibi figurine. Design them with an oversized head, a small body, and an exaggeratedly cute expression. Their shoes should look like they're made from peeled bananas, and their cheeks should be a soft, rosy pink. Place them in a scene filled with floating, candy-coated mini-bananas, edible glitter, and rainbow sprinkles. The textures should be soft and almost edible, with a playful, sugar-like finish.",
+        image: "images/prompts/chibi-style.jpg",
         category: "gemini",
         isPremium: true,
         trending: false,
         aiTool: "Gemini"
     },
     {
-        title: "Cinematic Street Portrait",
-        prompt: "Create a cinematic street portrait with urban background, dramatic lighting, stylish outfit, confident pose, city atmosphere, professional photography, shallow depth of field, modern aesthetic.",
-        image: "images/prompts/Cinematic Street Portrait.jpg",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
-
-    {
-        title: "Cyberpunk Future Portrait",
-        prompt: "Create a futuristic cyberpunk portrait with neon lighting, tech accessories, metallic makeup, urban sci-fi background, dramatic colors, high-tech aesthetic, dystopian atmosphere, digital art style.",
-        image: "images/prompts/Cyberpunk Future Portrait.jpg",
+        title: "Pastel Kawaii Figurine",
+        prompt: "Generate a hyper-kawaii 3D figurine of this person with a distinct pastel-core aesthetic. The setting is mid-air, surrounded by a swirl of cotton candy clouds and glitter-filled, translucent banana balloons. Clothe the figure in a vibrant pastel gradient outfit accessorized with glowing banana jewelry. The lighting should be bright and magical, giving everything an iridescent sheen for a whimsical and eye-catching look.",
+        image: "images/prompts/pastel-kawaii.jpg",
         category: "gemini",
         isPremium: true,
         trending: false,
         aiTool: "Gemini"
     },
     {
-        title: "Viral LinkedIn Post",
-        prompt: "Create viral LinkedIn post about [professional topic]. Structure: Personal story/experience, lesson learned, actionable insights, question for engagement. Professional tone, 1300 characters max.",
-        image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=500&fit=crop",
-        category: "chatgpt",
-        isPremium: true,
-        trending: false,
-        aiTool: "ChatGPT"
-    },
-
-    {
-        title: "Fine Art Painterly Portrait",
-        prompt: "Generate an artistic painterly portrait with classical painting style, soft brush strokes, renaissance lighting, elegant pose, timeless beauty, museum-quality aesthetic, fine art photography.",
-        image: "images/prompts/Fine Art Painterly Portrait.jpg",
+        title: "Retro Pixel Art Style",
+        prompt: "Transform this person into a bold pixel art character from a classic arcade game, designed to attract players. The sprite should have vibrant outlines and be posed heroically on a Tron-like neon grid floor. They wield a glowing neon banana sword and a translucent pixel shield. The background is a dark space filled with flashing pixel stars and a high-score table. Add subtle horizontal scan lines across the entire image to perfectly capture the look of an authentic 80s coin-op arcade monitor.",
+        image: "images/prompts/retro-pixel.jpg",
         category: "gemini",
         isPremium: true,
         trending: false,
         aiTool: "Gemini"
     },
     {
-        title: "Forest Sanctuary Portrait",
-        prompt: "Create a mystical forest portrait with natural woodland setting, dappled sunlight, earthy tones, peaceful expression, nature-inspired outfit, magical atmosphere, organic beauty, serene mood.",
-        image: "images/prompts/Forest Sanctuary Portrait.jpg",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
-
-    {
-        title: "Modern Business Portrait",
-        prompt: "Create a contemporary business portrait with sleek styling, modern office background, professional attire, confident demeanor, clean composition, corporate aesthetic, executive presence.",
-        image: "images/prompts/Modern Business Portrait.jpg",
+        title: "Pop Art Comic Style",
+        prompt: "Transform this person into a figurine straight from a vintage Sunday comic strip, rendered in a playful pop art style. Use thick, uniform black outlines and flat, bright colors like canary yellow, bubblegum pink, and sky blue, with some intentional off-register color bleed. The shading should be simple, using minimal halftone patterns. Their outfit is decorated with a fun, repeating banana print. A classic, rounded speech bubble above their head should read 'BANANA POWER!' in a fun, retro font. The background is a simple but impactful 'KAPOW!'-style burst with radiating action lines.",
+        image: "images/prompts/pop-art-comic.jpg",
         category: "gemini",
         isPremium: true,
         trending: false,
         aiTool: "Gemini"
     },
     {
-        title: "Red Saree Vintage Style",
-        prompt: "Generate an elegant vintage-style portrait in red saree with traditional jewelry, classic makeup, graceful pose, cultural aesthetic, timeless beauty, heritage fashion, sophisticated styling.",
-        image: "images/prompts/Red Saree Vintage Style.jpg",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
-    {
-        title: "Sophisticated Executive Portrait",
-        prompt: "Create a high-end executive portrait with luxury styling, premium background, authoritative presence, refined makeup, professional lighting, C-suite aesthetic, leadership qualities.",
-        image: "images/prompts/Sophisticated Executive Portrait.jpg",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
-
-    {
-        title: "Warm Author Headshot",
-        prompt: "Create a warm, approachable author headshot with cozy background, friendly expression, intellectual styling, soft lighting, bookish atmosphere, creative professional aesthetic.",
-        image: "images/prompts/Warm Author Headshot.jpg",
+        title: "Anime Hero Figurine",
+        prompt: "Illustrate this person as a legendary warrior from a space fantasy anime, captured in a heroic splash-page pose. They are armed with the 'Celestial Banana Blade,' a sword glowing with immense power. Their design includes gravity-defying neon hair and intense, oversized manga eyes that radiate energy. Their outfit is a set of stylized, battle-worn armor with a dramatically flowing cloak, caught in a cosmic wind. Frame them against a backdrop of a swirling purple and blue nebula, with streaks of light suggesting faster-than-light travel. The overall style should be high-energy, with bold outlines and a powerful, mythic atmosphere.",
+        image: "images/prompts/anime-hero.jpg",
         category: "gemini",
         isPremium: true,
         trending: false,
         aiTool: "Gemini"
     },
     
-    // PREMIUM PROMPTS - IMAGE GENERATION
+    // Bollywood & Retro Transformation Prompts
     {
-        title: "Viral Meme Template",
-        prompt: "Create viral meme image: [subject] with exaggerated facial expression, bold text overlay, high contrast colors, trending meme format, shareable design, social media optimized dimensions",
-        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop",
-        category: "midjourney",
+        title: "1970s Bollywood Superstar (Women)",
+        prompt: "Create a full-length photorealistic image of the uploaded person as a 1970s Bollywood superstar. Scene: outside a Mumbai cinema hall during a film premiere, marquee glowing in neon, vintage Bollywood posters on the walls. The subject is styled in Western-inspired Bollywood glamour of the 1970s, a shimmering sequined evening gown or satin jumpsuit with flared bottoms, a feather boa or faux fur stole draped over the shoulders, and platform heels. Accessories include oversized tinted sunglasses, chunky jewellery, and a clutch bag. Hair styled in voluminous waves or a glamorous blow-dry, with bold eyeliner and glossy lipstick completing the look. Surround them with flashing cameras, paparazzi holding vintage film cameras, and a crowd of fans reaching out for autographs. Add authentic 1970s colour grading (warm tones, film grain, cinematic contrast). Capture the aura of a confident, glamorous star making a grand entrance – charismatic, stylish, and larger-than-life.",
+        image: "images/prompts/bollywood-women.jpg",
+        category: "gemini",
         isPremium: true,
         trending: false,
-        aiTool: "Midjourney"
+        aiTool: "Gemini"
     },
     {
-        title: "Instagram Story Ad",
-        prompt: "Design Instagram story ad for [product]: Vertical 9:16 format, eye-catching visuals, minimal text, clear product focus, swipe-up CTA, brand colors, mobile-optimized",
-        image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=500&fit=crop",
-        category: "midjourney",
+        title: "1970s Bollywood Hero (Men)",
+        prompt: "Create a full-length photorealistic image of the uploaded person as a 1970s Bollywood superstar. Scene: outside a Mumbai cinema hall during a film premiere, with neon lights marquee, and vintage Bollywood posters on the walls. Style the subject in classic 70s hero fashion — a sharply tailored wide-collared suit with flared trousers, or a silk shirt left slightly unbuttoned paired with a patterned blazer, leather belt, and polished shoes. Accessories include aviator sunglasses, a silk scarf draped casually, or a gold chain for added flair. Hair styled in the signature retro look — side-parted, voluminous, or wavy — with a confident, expressive moustache if desired. Surround the subject with paparazzi holding vintage film cameras, bright flashbulbs, and enthusiastic fans reaching for autographs. Apply warm Eastmancolor tones, soft contrast, visible grain, and dramatic star lighting. Pose the subject mid-stride on the red carpet, waving with effortless charm, radiating the aura of a Bollywood superstar.",
+        image: "images/prompts/bollywood-men.jpg",
+        category: "gemini",
         isPremium: true,
         trending: false,
-        aiTool: "Midjourney"
+        aiTool: "Gemini"
     },
     {
-        title: "YouTube Thumbnail Design",
-        prompt: "Create viral YouTube thumbnail: Shocked face expression, bright colors (red/yellow), bold text overlay, arrow pointing, high contrast, clickbait style, 1280x720 resolution",
-        image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=500&fit=crop",
-        category: "midjourney",
+        title: "Golden Hour Studio Portrait",
+        prompt: "Craft a moody studio portrait of the uploaded person bathed in a golden-orange spotlight that creates a glowing circular halo behind them on the wall. The warm light should sculpt the face and upper body with soft, sunset-like tones while casting a strong head shadow to the right. Style the person in classic attire with dramatic lighting.",
+        image: "images/prompts/golden-hour.jpg",
+        category: "gemini",
         isPremium: true,
         trending: false,
-        aiTool: "Midjourney"
+        aiTool: "Gemini"
     },
     {
-        title: "Facebook Ad Creative",
-        prompt: "Design Facebook ad image: Product showcase, lifestyle context, emotional appeal, clear value proposition, minimal text, square 1:1 format, scroll-stopping visual",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop",
-        category: "midjourney",
+        title: "Vintage Saree Portrait (Ultra Realistic)",
+        prompt: "Make a 4K HD, realistic, and stunning portrait using this image. Show long, dark, wavy hair cascading over shoulders. Attire – a translucent, elegant black saree draped over one shoulder, revealing a fitted blouse underneath. White flowers are tucked behind her right ear. She is looking slightly to her right, with a soft, serene expression. The background is a plain, warm-toned wall, illuminated by a warm light source from the right, creating a distinct, soft-edged shadow of her profile and hair on the wall behind her. The overall mood is retro and artistic.",
+        image: "images/prompts/vintage-saree.jpg",
+        category: "gemini",
         isPremium: true,
         trending: false,
-        aiTool: "Midjourney"
+        aiTool: "Gemini"
     },
     {
-        title: "Viral Video Script",
-        prompt: "Create viral video script for [topic]: Hook in first 5 seconds, engaging storyline, emotional peaks, clear call-to-action, optimized for social media platforms, 60-90 seconds duration",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=500&fit=crop",
-        category: "veo",
+        title: "90s Movie Aesthetic",
+        prompt: "Create a retro, vintage, grainy but bright image of the reference picture, but draped in a perfect beige-colour, Pinterest-y aesthetic retro saree. It must feel like a 90s movie, brown hair, baddie with a small flower tucked visibly into her wavy hair, and a romantic, windy environment. The girl is standing against a solid wall, deep shadows and contrast drama, creating a mysterious and artistic atmosphere where the lighting is warm with the golden tones of evoking a sunset or golden hour glow. The background is minimalist and slightly textured; the expression on her face is moody, calm, yet happy and introspective.",
+        image: "images/prompts/90s-movie.jpg",
+        category: "gemini",
         isPremium: true,
         trending: false,
-        aiTool: "Veo"
+        aiTool: "Gemini"
     },
     {
-        title: "Product Demo Video",
-        prompt: "Generate product demo video: [product] showcase with smooth transitions, professional lighting, clear product benefits, engaging background music, call-to-action overlay, mobile-optimized format",
-        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=500&fit=crop",
-        category: "veo",
+        title: "Cinematic Night Portrait (Paris)",
+        prompt: "Create an ultra-realistic night-time portrait from this photo, standing near the Arc de Triomphe at Place Charles de Gaulle in Paris. Background: The Arc de Triomphe is fully visible and brightly illuminated in the center of the frame, with deep shadows and warm street lights glowing softly in the background. The classic 'Place Charles de Gaulle' street sign is clearly visible on the ornate lamppost to the right side of the subject. Lighting & Color: Maintain the warm, ambient nighttime lighting with subtle yellow-orange glows from the streetlights. Capture the same soft shadows and realistic noise/grain present in the original image. Apply similar color grading – warm highlights, deep shadows, and slightly muted tones to evoke a cinematic, moody feel. Pose & Angle: The subject is facing left, head tilted upward at a ~45-degree angle, with eyes closed and a serene, introspective expression.",
+        image: "images/prompts/paris-night.jpg",
+        category: "gemini",
         isPremium: true,
         trending: false,
-        aiTool: "Veo"
+        aiTool: "Gemini"
+    },
+    {
+        title: "Dramatic Black & White",
+        prompt: "Make an epic black and white close-up portrait of the uploaded pic with wet hair and water droplets on my face and shoulders. Strong dramatic lighting, sharp facial features, glossy lips, piercing eyes, and realistic skin texture. High contrast, studio shot, hyper-realistic, cinematic look, 4K detail using this picture.",
+        image: "images/prompts/dramatic-bw.jpg",
+        category: "gemini",
+        isPremium: true,
+        trending: false,
+        aiTool: "Gemini"
+    },
+    {
+        title: "1970s Jazz Club Retro",
+        prompt: "Create a hyper-realistic portrait of the uploaded person (preserve face 100%) styled as a 1970s retro icon. He is seated casually in a dimly lit lounge with vintage vinyl records stacked behind him, a glowing jukebox casting warm neon light across the scene. Outfit: open-collared patterned silk shirt, flared trousers, gold chain, and tinted aviator sunglasses. The lighting is warm amber with subtle film grain, evoking the ambience of old Bollywood jazz clubs. Pose is relaxed, with one arm resting on a velvet sofa and a confident half-smile.",
+        image: "images/prompts/jazz-club.jpg",
+        category: "gemini",
+        isPremium: true,
+        trending: false,
+        aiTool: "Gemini"
+    },
+    {
+        title: "Dark Aesthetic Portrait",
+        prompt: "Create a hyper-realistic, editorial-style portrait of the man in the image with a dark, alluring aesthetic. He has tousled, slightly wavy black hair that falls over his forehead, framing his face. His expression is serious and intense, with dark, soulful eyes. He wears a sleek black suit over a deep red, partially unbuttoned dress shirt that reveals an intricate, full chest and neck tattoo featuring symmetrical, detailed designs and a web motif at the center of his throat. A single long, gold earring dangles from one ear. A vivid red rose is pinned to the lapel of his suit jacket, enhancing the romantic and dramatic tone of the portrait.",
+        image: "images/prompts/dark-aesthetic.jpg",
+        category: "gemini",
+        isPremium: true,
+        trending: false,
+        aiTool: "Gemini"
+    },
+    {
+        title: "High Fashion LV Style",
+        prompt: "Make a hyper-realistic portrait of the uploaded person (preserve face 100%) wearing a high-end fashion LV outfit. The background is orange, the clothing is minimal, as a hyper-realistic scene, the guy is just slightly visible due to dark shadows, and he is wearing modern fashion frames.",
+        image: "images/prompts/high-fashion.jpg",
+        category: "gemini",
+        isPremium: true,
+        trending: false,
+        aiTool: "Gemini"
+    },
+    {
+        title: "Golden Hour Window Light",
+        prompt: "Create a softly lit portrait of the uploaded person standing indoors near a window with warm sunlight streaming through. Use a cinematic, golden-hour lighting style that highlights the face and hair with natural glow and soft shadows. The person should be wearing a loose, casual white shirt with slightly rolled-up sleeves. The mood should feel calm, dreamy, and natural, with soft depth of field and a warm, intimate atmosphere.",
+        image: "images/prompts/window-light.jpg",
+        category: "gemini",
+        isPremium: true,
+        trending: false,
+        aiTool: "Gemini"
+    },
+    {
+        title: "Relaxed Authority Pose",
+        prompt: "A hyper-realistic cinematic editorial portrait of the uploaded person (preserve face 100%). He stands tall in a dark, moody studio, surrounded by soft, drifting smoke under a dramatic spotlight. Outfit: Oversized slate-blue luxury suit with wide-leg trousers, paired with a slightly unbuttoned white silk shirt. Both hands tucked casually in pockets, shoulders relaxed, confident expression, head tilted slightly upward.",
+        image: "images/prompts/authority-pose.jpg",
+        category: "gemini",
+        isPremium: true,
+        trending: false,
+        aiTool: "Gemini"
+    },
+    {
+        title: "Cinematic Dramatic Saree",
+        prompt: "Generate a cinematic, hyper-realistic photo of the uploaded person wearing a flowing, deep-purple silk saree against a dramatic, stormy sky at dusk. The saree is billowing in the wind. The lighting is moody and high-contrast, with a single light source from the left highlighting the folds of the fabric and casting a long, dramatic shadow. The expression is intense and focused, as if a scene from a movie.",
+        image: "images/prompts/dramatic-saree.jpg",
+        category: "gemini",
+        isPremium: true,
+        trending: false,
+        aiTool: "Gemini"
     }
 ];
 
