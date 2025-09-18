@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         console.log('Loading prompts...');
         loadPrompts();
-    }, 100);
+    }, 200);
     
     setupEventListeners();
     
@@ -69,7 +69,12 @@ function updateUI() {
 
 function loadPrompts(filterCategory = 'all') {
     const grid = document.getElementById('gallery-grid');
-    if (!grid) return;
+    if (!grid) {
+        console.error('Gallery grid not found!');
+        return;
+    }
+    
+    console.log('Loading prompts for category:', filterCategory);
     
     // Fallback prompts if static-prompts.js not loaded
     const prompts = window.staticPrompts || [
@@ -123,6 +128,9 @@ function loadPrompts(filterCategory = 'all') {
         }
     ];
     
+    console.log('Total prompts available:', prompts.length);
+    console.log('Static prompts loaded:', !!window.staticPrompts);
+    
     grid.innerHTML = '';
     
     // Filter prompts based on category
@@ -134,6 +142,8 @@ function loadPrompts(filterCategory = 'all') {
         );
     }
     
+    console.log('Filtered prompts count:', filteredPrompts.length);
+    
     if (filteredPrompts.length === 0) {
         grid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7); grid-column: 1 / -1; padding: 40px;">No prompts found for this category.</p>';
         return;
@@ -142,8 +152,19 @@ function loadPrompts(filterCategory = 'all') {
     filteredPrompts.forEach((prompt, index) => {
         const isLocked = !currentUser && prompt.isPremium;
         const card = createCard(prompt, isLocked);
+        
+        console.log('Creating card for:', prompt.title);
+        
         grid.appendChild(card);
+        
+        // Add animation delay
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
     });
+    
+    console.log('Cards appended to grid. Grid children count:', grid.children.length);
 }
 
 function createCard(prompt, isLocked) {
@@ -157,6 +178,8 @@ function createCard(prompt, isLocked) {
         overflow: hidden;
         cursor: pointer;
         transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(30px);
     `;
     
     card.innerHTML = `
@@ -164,6 +187,10 @@ function createCard(prompt, isLocked) {
             <img src="${prompt.image}" alt="${prompt.title}" style="width: 100%; height: 100%; object-fit: cover;">
             ${isLocked ? '<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;"><div style="color: white; font-size: 32px;">🔒</div></div>' : ''}
             <div style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 600;">${prompt.aiTool}</div>
+        </div>
+        <div style="padding: 20px; text-align: center;">
+            <h3 style="color: white; margin-bottom: 10px; font-size: 16px; font-weight: 600;">${prompt.title}</h3>
+            <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${prompt.prompt.substring(0, 100)}...</p>
         </div>
     `;
     
@@ -211,7 +238,7 @@ function showModal(prompt) {
             
             <div style="display: flex; gap: 8px; flex-direction: column;">
                 <button onclick="navigator.clipboard.writeText('${prompt.prompt.replace(/'/g, "\\'")}').then(() => alert('Copied!'))" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; font-weight: 500;">Copy Prompt</button>
-                <button onclick="window.open('https://chat.openai.com', '_blank')" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500;">Open ${prompt.aiTool}</button>
+                <button onclick="openAITool('${prompt.aiTool}')" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500;">Open ${prompt.aiTool}</button>
             </div>
         </div>
     `;
@@ -325,3 +352,18 @@ function setupEventListeners() {
 
 // Global functions
 window.loginWithGoogle = loginWithGoogle;
+
+// Function to open correct AI tool
+function openAITool(aiTool) {
+    const urls = {
+        'ChatGPT': 'https://chat.openai.com',
+        'Gemini': 'https://gemini.google.com',
+        'Midjourney': 'https://www.midjourney.com',
+        'Veo': 'https://labs.google/veo'
+    };
+    
+    const url = urls[aiTool] || 'https://chat.openai.com';
+    window.open(url, '_blank');
+}
+
+window.openAITool = openAITool;
