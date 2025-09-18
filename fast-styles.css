@@ -12,6 +12,17 @@
     box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
 }
 
+/* Filter buttons */
+.filter-btn {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2) !important;
+    transform: translateY(-2px);
+}
+
 /* Profile dropdown fixes */
 .profile-dropdown { position: relative !important; }
 .dropdown-menu { 
@@ -30,4 +41,14 @@
         gap: 20px; 
     }
     .nav-links a { display: none; }
+    .category-filter {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    .filter-btn {
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+    }
 }

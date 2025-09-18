@@ -59,13 +59,22 @@ function updateUI() {
     }
 }
 
-function loadPrompts() {
+function loadPrompts(filterCategory = 'all') {
     const grid = document.getElementById('gallery-grid');
     if (!grid || !window.staticPrompts) return;
     
     grid.innerHTML = '';
     
-    window.staticPrompts.forEach((prompt, index) => {
+    // Filter prompts based on category
+    let filteredPrompts = window.staticPrompts;
+    if (filterCategory !== 'all') {
+        filteredPrompts = window.staticPrompts.filter(prompt => 
+            prompt.category === filterCategory || 
+            prompt.aiTool?.toLowerCase().includes(filterCategory)
+        );
+    }
+    
+    filteredPrompts.forEach((prompt, index) => {
         const isLocked = !currentUser && prompt.isPremium;
         const card = createCard(prompt, isLocked);
         grid.appendChild(card);
@@ -222,6 +231,24 @@ function setupEventListeners() {
             location.reload();
         };
     }
+    
+    // Filter buttons
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.onclick = () => {
+            // Update active button
+            filterBtns.forEach(b => {
+                b.style.background = 'rgba(255,255,255,0.1)';
+                b.style.color = 'white';
+            });
+            btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            btn.style.color = 'white';
+            
+            // Filter prompts
+            const category = btn.dataset.category;
+            loadPrompts(category);
+        };
+    });
     
     // Login buttons - delegate event handling
     document.onclick = (e) => {
