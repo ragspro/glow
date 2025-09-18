@@ -11,22 +11,31 @@ window.staticPrompts = [
         aiTool: "ChatGPT"
     },
     {
-        title: "YouTube Thumbnail Text",
-        prompt: "Generate viral YouTube thumbnail text for [video topic]. Create 3-5 word phrases that are: Bold, curiosity-driven, emotion-triggering, easy to read. Include power words like 'SECRET', 'SHOCKING', 'INSTANT'.",
-        image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=500&fit=crop",
+        title: "Golden Hour Coastline",
+        prompt: "Generate a stunning golden hour coastline portrait with ocean backdrop, warm sunset lighting, flowing hair, beach attire, natural glow, seaside atmosphere, romantic mood, coastal beauty.",
+        image: "images/prompts/Golden Hour Coastline.jpg",
         category: "gemini",
         isPremium: false,
         trending: true,
         aiTool: "Gemini"
     },
     {
-        title: "Viral Ad Copy Generator",
-        prompt: "Write viral ad copy for [product/service]. Structure: Attention-grabbing headline, pain point identification, solution presentation, social proof, urgency creator, clear CTA. Keep under 150 words, highly persuasive.",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop",
-        category: "chatgpt",
+        title: "Vintage 1970s Style",
+        prompt: "Generate a retro 1970s style portrait with vintage fashion, retro hairstyle, warm color palette, nostalgic atmosphere, classic beauty, period-accurate styling, timeless charm.",
+        image: "images/prompts/Vintage 1970s Style.jpg",
+        category: "gemini",
         isPremium: false,
         trending: true,
-        aiTool: "ChatGPT"
+        aiTool: "Gemini"
+    },
+    {
+        title: "Classic Corporate Headshot",
+        prompt: "Generate a professional corporate headshot with clean background, business attire, confident expression, professional lighting, sharp focus, executive style, suitable for LinkedIn and business profiles.",
+        image: "images/prompts/Classic Corporate Headshot.jpg",
+        category: "gemini",
+        isPremium: false,
+        trending: true,
+        aiTool: "Gemini"
     },
     
     // PREMIUM PROMPTS - CHATGPT/GEMINI TEXT PROMPTS
@@ -75,15 +84,7 @@ window.staticPrompts = [
         trending: false,
         aiTool: "Gemini"
     },
-    {
-        title: "Classic Corporate Headshot",
-        prompt: "Generate a professional corporate headshot with clean background, business attire, confident expression, professional lighting, sharp focus, executive style, suitable for LinkedIn and business profiles.",
-        image: "images/prompts/Classic Corporate Headshot.jpg",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
+
     {
         title: "Cyberpunk Future Portrait",
         prompt: "Create a futuristic cyberpunk portrait with neon lighting, tech accessories, metallic makeup, urban sci-fi background, dramatic colors, high-tech aesthetic, dystopian atmosphere, digital art style.",
@@ -129,15 +130,7 @@ window.staticPrompts = [
         trending: false,
         aiTool: "Gemini"
     },
-    {
-        title: "Golden Hour Coastline",
-        prompt: "Generate a stunning golden hour coastline portrait with ocean backdrop, warm sunset lighting, flowing hair, beach attire, natural glow, seaside atmosphere, romantic mood, coastal beauty.",
-        image: "images/prompts/Golden Hour Coastline.jpg",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
+
     {
         title: "Modern Business Portrait",
         prompt: "Create a contemporary business portrait with sleek styling, modern office background, professional attire, confident demeanor, clean composition, corporate aesthetic, executive presence.",
@@ -165,15 +158,7 @@ window.staticPrompts = [
         trending: false,
         aiTool: "Gemini"
     },
-    {
-        title: "Vintage 1970s Style",
-        prompt: "Generate a retro 1970s style portrait with vintage fashion, retro hairstyle, warm color palette, nostalgic atmosphere, classic beauty, period-accurate styling, timeless charm.",
-        image: "images/prompts/Vintage 1970s Style.jpg",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
+
     {
         title: "Warm Author Headshot",
         prompt: "Create a warm, approachable author headshot with cozy background, friendly expression, intellectual styling, soft lighting, bookish atmosphere, creative professional aesthetic.",
