@@ -48,15 +48,7 @@ window.staticPrompts = [
         trending: false,
         aiTool: "ChatGPT"
     },
-    {
-        title: "Email Marketing Sequence",
-        prompt: "Write a 5-email viral marketing sequence for [product]. Each email: Compelling subject line, story-driven content, value delivery, soft pitch, clear CTA. Progressive trust building, urgency creation.",
-        image: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&h=500&fit=crop",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
+
     {
         title: "Autumn Countryside Portrait",
         prompt: "Create a warm autumn countryside portrait with golden hour lighting, rustic background, cozy sweater, natural makeup, soft smile, falling leaves, vintage film aesthetic, professional photography style.",
@@ -103,15 +95,7 @@ window.staticPrompts = [
         trending: false,
         aiTool: "ChatGPT"
     },
-    {
-        title: "Product Launch Copy",
-        prompt: "Write viral product launch copy for [product]. Include: Problem agitation, solution reveal, unique selling proposition, social proof, limited-time offer, FOMO creation, multiple CTAs.",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop",
-        category: "gemini",
-        isPremium: true,
-        trending: false,
-        aiTool: "Gemini"
-    },
+
     {
         title: "Fine Art Painterly Portrait",
         prompt: "Generate an artistic painterly portrait with classical painting style, soft brush strokes, renaissance lighting, elegant pose, timeless beauty, museum-quality aesthetic, fine art photography.",
